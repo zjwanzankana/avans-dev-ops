@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Domain.Pipelines.PipelineCommands.PipelineJobAnalyzeCommand" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Pipelines\PipelineCommands\PipelineJobAnalyzeCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.PipelineCommands.PipelineJobBuildCommand" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAQAAAQQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pipelines\PipelineCommands\PipelineJobBuildCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.PipelineCommands.PipelineJobDeployCommand" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Pipelines\PipelineCommands\PipelineJobDeployCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.PipelineCommands.PipelineJobPackageCommand" Collapsed="true">
+    <Position X="14" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Pipelines\PipelineCommands\PipelineJobPackageCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.PipelineCommands.PipelineJobSourcesCommand" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Pipelines\PipelineCommands\PipelineJobSourcesCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.PipelineCommands.PipelineJobTestCommand" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAQQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pipelines\PipelineCommands\PipelineJobTestCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.PipelineCommands.PipelineJobUtilityCommand" Collapsed="true">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAQAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Pipelines\PipelineCommands\PipelineJobUtilityCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.Pipeline" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAAIAAAAAAAAAQAAAAAAAAEQAAAAIAAgACAQBAABAA=</HashCode>
+      <FileName>Pipelines\Pipeline.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.PipelineJobCommand" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEIAIAAAAAAAAAQAAAAAAAAEQBAAAAAAAAAAABBABAA=</HashCode>
+      <FileName>Pipelines\PipelineJobCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Domain.Pipelines.PipelineLoader" Collapsed="true">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pipelines\PipelineLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Domain.Pipelines.PipelineJobStatus" Collapsed="true">
+    <Position X="16.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAIAAAAAAAAAAAAAAAAAAQAAAAAAIAAAAAAAQAAA=</HashCode>
+      <FileName>Pipelines\PipelineJobStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

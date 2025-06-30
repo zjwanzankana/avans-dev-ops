@@ -1,0 +1,22 @@
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\bin\Debug\net9.0\Domain.deps.json
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\bin\Debug\net9.0\Domain.dll
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\bin\Debug\net9.0\Domain.pdb
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\obj\Debug\net9.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\obj\Debug\net9.0\Domain.AssemblyInfoInputs.cache
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\obj\Debug\net9.0\Domain.AssemblyInfo.cs
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\obj\Debug\net9.0\Domain.csproj.CoreCompileInputs.cache
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\obj\Debug\net9.0\Domain.dll
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\obj\Debug\net9.0\refint\Domain.dll
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\obj\Debug\net9.0\Domain.pdb
+C:\Users\zjwanz\Desktop\4. Software ontwerp & architectuur 3\SOA3\Domain\obj\Debug\net9.0\ref\Domain.dll
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\bin\Debug\net9.0\Domain.deps.json
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\bin\Debug\net9.0\Domain.dll
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\bin\Debug\net9.0\Domain.pdb
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\obj\Debug\net9.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\obj\Debug\net9.0\Domain.AssemblyInfoInputs.cache
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\obj\Debug\net9.0\Domain.AssemblyInfo.cs
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\obj\Debug\net9.0\Domain.csproj.CoreCompileInputs.cache
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\obj\Debug\net9.0\Domain.dll
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\obj\Debug\net9.0\refint\Domain.dll
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\obj\Debug\net9.0\Domain.pdb
+c:\Users\zjwanz\Repos\avans-dev-ops\Domain\obj\Debug\net9.0\ref\Domain.dll
