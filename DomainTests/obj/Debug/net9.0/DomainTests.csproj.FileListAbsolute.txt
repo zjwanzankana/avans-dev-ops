@@ -100,3 +100,4 @@ c:\Users\zjwanz\Repos\avans-dev-ops\DomainTests\obj\Debug\net9.0\refint\DomainTe
 c:\Users\zjwanz\Repos\avans-dev-ops\DomainTests\obj\Debug\net9.0\DomainTests.pdb
 c:\Users\zjwanz\Repos\avans-dev-ops\DomainTests\obj\Debug\net9.0\DomainTests.genruntimeconfig.cache
 c:\Users\zjwanz\Repos\avans-dev-ops\DomainTests\obj\Debug\net9.0\ref\DomainTests.dll
+C:\Users\zjwanz\Repos\avans-dev-ops\DomainTests\obj\Debug\net9.0\DomainTests.sourcelink.json

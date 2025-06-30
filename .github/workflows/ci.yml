@@ -1,0 +1,41 @@
+name: Build-Test-Analyse
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    # ------ Sonar analyse starten ------
+    - name: SonarCloud – Begin analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        dotnet tool install --global dotnet-sonarscanner
+        dotnet-sonarscanner begin \
+          /o:"${{ secrets.SONAR_ORG }}" \
+          /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
+          /d:sonar.login="${SONAR_TOKEN}"
+
+    # ------ Build & tests (met coverage) ------
+    - run: dotnet restore
+    - run: dotnet build --no-restore -c Release
+    - run: dotnet test --no-build -c Release --collect:"XPlat Code Coverage"
+
+    # ------ Sonar analyse uploaden ------
+    - name: SonarCloud – End analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: dotnet-sonarscanner end /d:sonar.login="${SONAR_TOKEN}"

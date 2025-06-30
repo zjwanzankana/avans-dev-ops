@@ -1,42 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\",
+  "WorkspaceRootPath": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|c:\\users\\zjwanz\\repos\\avans-dev-ops\\domaintests\\reporttests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|solutionrelative:domaintests\\reporttests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\notifications\\ibacklogobservable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\notifications\\ibacklogobservable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\notifications\\ibacklogobserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\notifications\\ibacklogobserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\notifications\\notificator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\notifications\\notificator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\notifications\\inotificatorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\notifications\\inotificatorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\developers\\developer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\developers\\developer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\backlogs\\backlogitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\backlogs\\backlogitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\backlogs\\backlogitemstates\\donestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\backlogs\\backlogitemstates\\donestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\desktop\\4. software ontwerp \u0026 architectuur 3\\soa3\\domain\\scm\\branchobservable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\scm\\branchobservable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|c:\\users\\zjwanz\\repos\\avans-dev-ops\\domaintests\\backlogtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|solutionrelative:domaintests\\backlogtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -51,118 +23,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Project.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Project.cs",
-              "RelativeDocumentMoniker": "Domain\\Project.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Project.cs",
-              "RelativeToolTip": "Domain\\Project.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAyAAAAAAAAAA==",
+              "Title": "ReportTests.cs",
+              "DocumentMoniker": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\ReportTests.cs",
+              "RelativeDocumentMoniker": "DomainTests\\ReportTests.cs",
+              "ToolTip": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\ReportTests.cs",
+              "RelativeToolTip": "DomainTests\\ReportTests.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAASwHwAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T19:03:17.223Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Developer.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Developers\\Developer.cs",
-              "RelativeDocumentMoniker": "Domain\\Developers\\Developer.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Developers\\Developer.cs",
-              "RelativeToolTip": "Domain\\Developers\\Developer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-23T20:03:21.729Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "INotificatorService.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Notifications\\INotificatorService.cs",
-              "RelativeDocumentMoniker": "Domain\\Notifications\\INotificatorService.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Notifications\\INotificatorService.cs",
-              "RelativeToolTip": "Domain\\Notifications\\INotificatorService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-23T19:58:44.248Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Notificator.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Notifications\\Notificator.cs",
-              "RelativeDocumentMoniker": "Domain\\Notifications\\Notificator.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Notifications\\Notificator.cs",
-              "RelativeToolTip": "Domain\\Notifications\\Notificator.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-23T19:58:34.954Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "BacklogItem.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Backlogs\\BacklogItem.cs",
-              "RelativeDocumentMoniker": "Domain\\Backlogs\\BacklogItem.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Backlogs\\BacklogItem.cs",
-              "RelativeToolTip": "Domain\\Backlogs\\BacklogItem.cs",
-              "ViewState": "AgIAAHkAAAAAAAAAAAAUwKwAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-23T19:48:48.461Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IBacklogObserver.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Notifications\\IBacklogObserver.cs",
-              "RelativeDocumentMoniker": "Domain\\Notifications\\IBacklogObserver.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Notifications\\IBacklogObserver.cs",
-              "RelativeToolTip": "Domain\\Notifications\\IBacklogObserver.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-23T19:46:34.881Z",
+              "WhenOpened": "2025-06-30T20:38:30.995Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "IBacklogObservable.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Notifications\\IBacklogObservable.cs",
-              "RelativeDocumentMoniker": "Domain\\Notifications\\IBacklogObservable.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Notifications\\IBacklogObservable.cs",
-              "RelativeToolTip": "Domain\\Notifications\\IBacklogObservable.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Title": "BacklogTests.cs",
+              "DocumentMoniker": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\BacklogTests.cs",
+              "RelativeDocumentMoniker": "DomainTests\\BacklogTests.cs",
+              "ToolTip": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\BacklogTests.cs",
+              "RelativeToolTip": "DomainTests\\BacklogTests.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAgwGkAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-23T19:46:22.714Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "DoneState.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Backlogs\\BacklogItemStates\\DoneState.cs",
-              "RelativeDocumentMoniker": "Domain\\Backlogs\\BacklogItemStates\\DoneState.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\Backlogs\\BacklogItemStates\\DoneState.cs",
-              "RelativeToolTip": "Domain\\Backlogs\\BacklogItemStates\\DoneState.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABqAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-24T16:24:57.408Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "BranchObservable.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\SCM\\BranchObservable.cs",
-              "RelativeDocumentMoniker": "Domain\\SCM\\BranchObservable.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Desktop\\4. Software ontwerp \u0026 architectuur 3\\SOA3\\Domain\\SCM\\BranchObservable.cs",
-              "RelativeToolTip": "Domain\\SCM\\BranchObservable.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-24T14:41:47.972Z",
+              "WhenOpened": "2025-06-30T20:34:57.663Z",
               "EditorCaption": ""
             }
           ]
