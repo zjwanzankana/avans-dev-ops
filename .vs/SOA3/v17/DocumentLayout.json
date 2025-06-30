@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\repos\\avans-dev-ops\\domain\\reports\\format.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\reports\\format.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|c:\\users\\zjwanz\\repos\\avans-dev-ops\\domaintests\\reporttests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|solutionrelative:domaintests\\reporttests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -23,6 +27,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Format.cs",
+              "DocumentMoniker": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\Domain\\Reports\\Format.cs",
+              "RelativeDocumentMoniker": "Domain\\Reports\\Format.cs",
+              "ToolTip": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\Domain\\Reports\\Format.cs",
+              "RelativeToolTip": "Domain\\Reports\\Format.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T21:47:48.501Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "ReportTests.cs",
               "DocumentMoniker": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\ReportTests.cs",
               "RelativeDocumentMoniker": "DomainTests\\ReportTests.cs",
@@ -35,7 +52,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "BacklogTests.cs",
               "DocumentMoniker": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\BacklogTests.cs",
               "RelativeDocumentMoniker": "DomainTests\\BacklogTests.cs",
@@ -43,8 +60,7 @@
               "RelativeToolTip": "DomainTests\\BacklogTests.cs",
               "ViewState": "AgIAAEwAAAAAAAAAAAAgwGkAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T20:34:57.663Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-30T20:34:57.663Z"
             }
           ]
         }

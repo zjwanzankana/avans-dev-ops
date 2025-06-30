@@ -9,33 +9,64 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
 
     steps:
-    - uses: actions/checkout@v4
+      # 1. Check-out repo
+      - uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+      # 2. .NET 9 preview
+      - name: Setup .NET 9 preview
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+          dotnet-quality: preview
 
-    # ------ Sonar analyse starten ------
-    - name: SonarCloud – Begin analysis
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        dotnet tool install --global dotnet-sonarscanner
-        dotnet-sonarscanner begin \
-          /o:"${{ secrets.SONAR_ORG }}" \
-          /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
-          /d:sonar.login="${SONAR_TOKEN}"
+      # 3. (eenmalig) Coverlet in test-project
+      - name: Ensure Coverlet.msbuild is present
+        run: |
+          if ! grep -q 'Coverlet.MSBuild' DomainTests/DomainTests.csproj; then
+            dotnet add DomainTests/DomainTests.csproj package coverlet.msbuild
+          fi
 
-    # ------ Build & tests (met coverage) ------
-    - run: dotnet restore
-    - run: dotnet build --no-restore -c Release
-    - run: dotnet test --no-build -c Release --collect:"XPlat Code Coverage"
+      # 4. Sonar – begin analyse
+      - name: SonarCloud – Begin analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet-sonarscanner begin \
+            /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
+            /o:"${{ secrets.SONAR_ORG }}"  \
+            /d:sonar.login="${SONAR_TOKEN}" \
+            /d:sonar.branch.name=main \
+            /d:sonar.cs.opencover.reportsPaths=coverage/coverage.opencover.xml \
+            /d:sonar.qualitygate.wait=true
 
-    # ------ Sonar analyse uploaden ------
-    - name: SonarCloud – End analysis
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: dotnet-sonarscanner end /d:sonar.login="${SONAR_TOKEN}"
+      # 5. Build
+      - run: dotnet restore
+      - run: dotnet build --no-restore -c Release
+
+      # 6. Tests + OpenCover-coverage
+      - name: Test with coverage
+        run: |
+          dotnet test DomainTests/DomainTests.csproj --no-build -c Release \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=opencover \
+            /p:CoverletOutput=coverage/
+
+      # 7. Verplaats rapport naar repo-root/coverage
+      - name: Move coverage report
+        run: |
+          mkdir -p coverage
+          report=$(find DomainTests -name 'coverage.opencover.xml')
+          echo "Found report at: $report"
+          cp "$report" coverage/coverage.opencover.xml
+
+      # 8. Sonar – end (upload + gate)
+      - name: SonarCloud – End analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet-sonarscanner end /d:sonar.login="${SONAR_TOKEN}"

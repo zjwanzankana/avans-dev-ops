@@ -1,6 +1,6 @@
-﻿public enum Format
-{
-    PDF,
-    PNG,
-    XML
-}
+﻿    public enum Format
+    {
+        PDF,
+        PNG,
+        XML
+    }
