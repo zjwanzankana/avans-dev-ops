@@ -16,6 +16,8 @@ jobs:
     steps:
       # 1. Check-out repo
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # 2. .NET 9 preview
       - name: Setup .NET 9 preview
@@ -33,19 +35,32 @@ jobs:
 
       # 4. Sonar – begin analyse
       - name: SonarCloud – Begin analysis
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.fork == false }}
         env:
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
           SONAR_ORG: ${{ secrets.SONAR_ORG }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+          GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           dotnet tool install --global dotnet-sonarscanner
+          extra_args=()
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            extra_args+=("/d:sonar.pullrequest.key=${GITHUB_PR_NUMBER}")
+            extra_args+=("/d:sonar.pullrequest.branch=${GITHUB_HEAD_REF}")
+            extra_args+=("/d:sonar.pullrequest.base=${GITHUB_BASE_REF}")
+            extra_args+=("/d:sonar.pullrequest.github.repository=${GITHUB_REPOSITORY}")
+          else
+            extra_args+=("/d:sonar.branch.name=${GITHUB_REF_NAME}")
+          fi
           dotnet-sonarscanner begin \
             /k:"${SONAR_PROJECT_KEY}" \
             /o:"${SONAR_ORG}"  \
+            /d:sonar.host.url="${SONAR_HOST_URL}" \
             /d:sonar.login="${SONAR_TOKEN}" \
-            /d:sonar.branch.name=main \
             /d:sonar.cs.opencover.reportsPaths=coverage/coverage.opencover.xml \
-            /d:sonar.qualitygate.wait=true
+            /d:sonar.qualitygate.wait=true \
+            "${extra_args[@]}"
 
       # 5. Build
       - run: dotnet restore
@@ -69,6 +84,7 @@ jobs:
 
       # 8. Sonar – end (upload + gate)
       - name: SonarCloud – End analysis
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.fork == false }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: dotnet-sonarscanner end /d:sonar.login="${SONAR_TOKEN}"
