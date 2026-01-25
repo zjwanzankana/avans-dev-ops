@@ -34,12 +34,14 @@ jobs:
       # 4. Sonar – begin analyse
       - name: SonarCloud – Begin analysis
         env:
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORG: ${{ secrets.SONAR_ORG }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet tool install --global dotnet-sonarscanner
           dotnet-sonarscanner begin \
-            /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
-            /o:"${{ secrets.SONAR_ORG }}"  \
+            /k:"${SONAR_PROJECT_KEY}" \
+            /o:"${SONAR_ORG}"  \
             /d:sonar.login="${SONAR_TOKEN}" \
             /d:sonar.branch.name=main \
             /d:sonar.cs.opencover.reportsPaths=coverage/coverage.opencover.xml \
