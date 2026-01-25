@@ -1,4 +1,5 @@
 using Domain.SCM;
+using Moq;
 
 namespace DomainTests
 {
@@ -30,25 +31,15 @@ namespace DomainTests
         [Fact]
         public void A_Branch_Notifies_Observers_On_Push()
         {
-            var observer = new TestBranchObserver();
+            var observer = new Mock<IBranchObserver>();
             var branch = new Branch("main");
             var developer = TestHelpers.CreateDeveloper("Dev", Role.Developer);
             var commit = new Commit(developer, new Code("code"));
 
-            branch.Register(observer);
+            branch.Register(observer.Object);
             branch.PushCommit(commit);
 
-            Assert.Equal(1, observer.UpdateCount);
-        }
-
-        private sealed class TestBranchObserver : IBranchObserver
-        {
-            public int UpdateCount { get; private set; }
-
-            public void Update()
-            {
-                UpdateCount++;
-            }
+            observer.Verify(o => o.Update(), Times.Once);
         }
 
     }

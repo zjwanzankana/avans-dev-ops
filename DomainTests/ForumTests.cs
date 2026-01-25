@@ -1,4 +1,5 @@
 using Domain.Forums;
+using Moq;
 using System;
 using ForumThread = Domain.Forums.Thread;
 
@@ -48,10 +49,10 @@ namespace DomainTests
         [Fact]
         public void A_Thread_Notifies_Existing_Comment_Authors()
         {
-            var service1 = new RecordingNotificatorService();
-            var service2 = new RecordingNotificatorService();
-            var author1 = TestHelpers.CreateDeveloper("Alice", Role.Developer, service1);
-            var author2 = TestHelpers.CreateDeveloper("Bob", Role.Developer, service2);
+            var service1 = new Mock<INotificatorService>();
+            var service2 = new Mock<INotificatorService>();
+            var author1 = TestHelpers.CreateDeveloper("Alice", Role.Developer, service1.Object);
+            var author2 = TestHelpers.CreateDeveloper("Bob", Role.Developer, service2.Object);
             var activity = new Activity("Work");
             var thread = new ForumThread("Topic", author1, activity);
             var comment1 = new Comment(thread, "First", author1);
@@ -60,7 +61,7 @@ namespace DomainTests
             thread.AddComment(comment1);
             thread.AddComment(comment2);
 
-            Assert.Equal(1, service1.MessagesSent);
+            service1.Verify(s => s.SendNotification(It.Is<string>(m => m.Contains("New comment")), author1), Times.Once);
         }
 
         [Fact]
@@ -89,14 +90,5 @@ namespace DomainTests
             Assert.Throws<InvalidOperationException>(() => thread.DeleteComment(comment));
         }
 
-        private sealed class RecordingNotificatorService : INotificatorService
-        {
-            public int MessagesSent { get; private set; }
-
-            public void SendNotification(string message, Developer developer)
-            {
-                MessagesSent++;
-            }
-        }
     }
 }

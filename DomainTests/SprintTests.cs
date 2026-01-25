@@ -1,11 +1,10 @@
 using Domain.Backlogs;
 using Domain.Backlogs.BacklogItemStates;
 using Domain.Pipelines;
-using Domain.Pipelines.PipelineCommands;
 using Domain.Sprints;
 using Domain.Sprints.SprintStates;
+using Moq;
 using System;
-using System.Reflection;
 
 namespace DomainTests
 {
@@ -238,7 +237,11 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
             var backlog = project.Backlog;
-            var pipeline = new Pipeline(new List<PipelineJobCommand> {new PipelineJobAnalyzeCommand("Hey", "analyze the code"), new PipelineJobBuildCommand("Hey", "Biuld the code", true) }, "First");
+            var pipeline = new Pipeline(new List<PipelineJobCommand>
+            {
+                CreateCommand("Hey", PipelineJobStatus.FINISHED, "Analyze done").Object,
+                CreateCommand("Hey", PipelineJobStatus.FINISHED, "Build done").Object
+            }, "First");
 
             var sprint = SprintFactory.GetReleaseSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers, pipeline);
 
@@ -272,7 +275,11 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
             var backlog = project.Backlog;
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobAnalyzeCommand("Hey", "analyze the code"), new PipelineJobBuildCommand("Hey", "Biuld the code", true) }, "First");
+            var pipeline = new Pipeline(new List<PipelineJobCommand>
+            {
+                CreateCommand("Hey", PipelineJobStatus.FINISHED, "Analyze done").Object,
+                CreateCommand("Hey", PipelineJobStatus.FINISHED, "Build done").Object
+            }, "First");
 
             var sprint = SprintFactory.GetReleaseSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers, pipeline);
 
@@ -305,7 +312,11 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
             var backlog = project.Backlog;
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobAnalyzeCommand("Hey", "analyze the code"), new PipelineJobBuildCommand("Hey", "Biuld the code", true) }, "First");
+            var pipeline = new Pipeline(new List<PipelineJobCommand>
+            {
+                CreateCommand("Hey", PipelineJobStatus.FINISHED, "Analyze done").Object,
+                CreateCommand("Hey", PipelineJobStatus.FINISHED, "Build done").Object
+            }, "First");
 
             var sprint = SprintFactory.GetReleaseSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers, pipeline);
 
@@ -337,7 +348,11 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
             var backlog = project.Backlog;
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobAnalyzeCommand("Hey", "analyze the code"), new PipelineJobBuildCommand("Hey", "Biuld the code", true) }, "First");
+            var pipeline = new Pipeline(new List<PipelineJobCommand>
+            {
+                CreateCommand("Hey", PipelineJobStatus.FINISHED, "Analyze done").Object,
+                CreateCommand("Hey", PipelineJobStatus.FINISHED, "Build done").Object
+            }, "First");
 
             ReviewSprint sprint = SprintFactory.GetReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
@@ -375,7 +390,6 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
             var backlog = project.Backlog;
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobAnalyzeCommand("Hey", "analyze the code"), new PipelineJobBuildCommand("Hey", "Biuld the code", true) }, "First");
 
             ReviewSprint sprint = SprintFactory.GetReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
@@ -389,6 +403,27 @@ namespace DomainTests
 
             //Assert
             Assert.Throws<InvalidOperationException>(() => sprint.SetReviewItem(review));
+        }
+
+        private static Mock<PipelineJobCommand> CreateCommand(string name, PipelineJobStatus status, string output)
+        {
+            var mock = new Mock<PipelineJobCommand>(name, "command");
+            mock.Setup(c => c.Execute()).Callback(() =>
+            {
+                SetCommandStatus(mock.Object, status);
+                SetCommandOutput(mock.Object, output);
+            });
+            return mock;
+        }
+
+        private static void SetCommandStatus(PipelineJobCommand command, PipelineJobStatus status)
+        {
+            typeof(PipelineJobCommand).GetProperty("Status")!.SetValue(command, status);
+        }
+
+        private static void SetCommandOutput(PipelineJobCommand command, string output)
+        {
+            typeof(PipelineJobCommand).GetProperty("Output")!.SetValue(command, output);
         }
     }
 }

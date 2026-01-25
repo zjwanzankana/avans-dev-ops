@@ -1,3 +1,5 @@
+using Moq;
+
 namespace DomainTests
 {
     /// <summary>
@@ -6,11 +8,11 @@ namespace DomainTests
     public static class TestHelpers
     {
         /// <summary>
-        /// Cre ëert een Developer met een EmailMessageService als default notificatie service
+        /// Cre ëert een Developer met een gemockte notificatie service
         /// </summary>
         public static Developer CreateDeveloper(string name, Role role)
         {
-            return new Developer(name, role, new EmailMessageService());
+            return new Developer(name, role, Mock.Of<INotificatorService>());
         }
         
         /// <summary>

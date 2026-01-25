@@ -1,5 +1,6 @@
 using Domain.Notifications;
 using Domain.Sprints;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +39,9 @@ namespace DomainTests
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
 
-            var notificator = new Notificator(developer1);
+            var service = new Mock<INotificatorService>();
+            var notifiedDeveloper = TestHelpers.CreateDeveloper("Hans", Role.Developer, service.Object);
+            var notificator = new Notificator(notifiedDeveloper);
             backlogItem.Register(notificator);
 
             backlogItem.State.NextState();
@@ -50,6 +53,7 @@ namespace DomainTests
             //Assert
             Assert.Equal(EBacklogStates.done, backlogItem.StateType);
             Assert.True(notificator.MessagesSent > 0);
+            service.Verify(s => s.SendNotification(It.IsAny<string>(), notifiedDeveloper), Times.AtLeastOnce);
         }
     }
 }

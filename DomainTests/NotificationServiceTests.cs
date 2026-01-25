@@ -1,5 +1,6 @@
 using Domain.MessageServices;
 using Domain.Notifications.ExternalMessageServices;
+using Moq;
 using System;
 
 namespace DomainTests
@@ -9,12 +10,23 @@ namespace DomainTests
         [Fact]
         public void A_Developer_Uses_The_Notificator_Service()
         {
-            var service = new RecordingNotificatorService();
-            var developer = TestHelpers.CreateDeveloper("Dev", Role.Developer, service);
+            var service = new Mock<INotificatorService>();
+            var developer = TestHelpers.CreateDeveloper("Dev", Role.Developer, service.Object);
 
             developer.SendNotification("Hello");
 
-            Assert.Equal(1, service.MessagesSent);
+            service.Verify(s => s.SendNotification("Hello", developer), Times.Once);
+        }
+
+        [Fact]
+        public void A_Developer_Uses_The_Notificator_Service_Via_Mock()
+        {
+            var service = new Mock<INotificatorService>();
+            var developer = TestHelpers.CreateDeveloper("Dev", Role.Developer, service.Object);
+
+            developer.SendNotification("Hello");
+
+            service.Verify(s => s.SendNotification("Hello", developer), Times.Once);
         }
 
         [Fact]
@@ -29,14 +41,5 @@ namespace DomainTests
             Assert.Throws<ArgumentNullException>(() => google.SendNotification("msg", null));
         }
 
-        private sealed class RecordingNotificatorService : INotificatorService
-        {
-            public int MessagesSent { get; private set; }
-
-            public void SendNotification(string message, Developer developer)
-            {
-                MessagesSent++;
-            }
-        }
     }
 }

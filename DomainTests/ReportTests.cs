@@ -1,13 +1,9 @@
 using Domain.Pipelines;
-using Domain.Pipelines.PipelineCommands;
 using Domain.Reports;
 using Domain.Sprints;
-using Microsoft.VisualBasic;
+using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainTests
 {
@@ -155,7 +151,7 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
             var backlog = project.Backlog;
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobDeployCommand("test", "test.exe -t") }, "first");
+            var pipeline = CreatePipeline();
             var sprint = new ReleaseSprint(project, name, DateTime.Now, DateTime.Now.AddDays(14), productOwner, new List<Developer> { productOwner }, pipeline);
 
             //Act
@@ -176,7 +172,7 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobDeployCommand("test", "test.exe -t") }, "first");
+            var pipeline = CreatePipeline();
             var sprint = new ReleaseSprint(project, name, DateTime.Now, DateTime.Now.AddDays(14), productOwner, new List<Developer> { productOwner }, pipeline);
             project.AddSprint(sprint);
 
@@ -199,7 +195,7 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobDeployCommand("test", "test.exe -t") }, "first");
+            var pipeline = CreatePipeline();
             var sprint = new ReleaseSprint(project, name, DateTime.Now, DateTime.Now.AddDays(14), productOwner, new List<Developer> { productOwner }, pipeline);
             project.AddSprint(sprint);
 
@@ -223,7 +219,7 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobDeployCommand("test", "test.exe -t") }, "first");
+            var pipeline = CreatePipeline();
             var sprint = new ReleaseSprint(project, name, DateTime.Now, DateTime.Now.AddDays(14), productOwner, new List<Developer> { productOwner }, pipeline);
             project.AddSprint(sprint);
 
@@ -241,7 +237,7 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobDeployCommand("test", "test.exe -t") }, "first");
+            var pipeline = CreatePipeline();
             var sprint = new ReleaseSprint(project, name, DateTime.Now, DateTime.Now.AddDays(14), productOwner, new List<Developer> { productOwner }, pipeline);
             project.AddSprint(sprint);
 
@@ -260,7 +256,7 @@ namespace DomainTests
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobDeployCommand("test", "test.exe -t") }, "first");
+            var pipeline = CreatePipeline();
             var sprint = new ReleaseSprint(project, name, DateTime.Now, DateTime.Now.AddDays(14), productOwner, new List<Developer> { productOwner }, pipeline);
             project.AddSprint(sprint);
 
@@ -268,6 +264,33 @@ namespace DomainTests
             var report = sprint.GenerateDeploymentReport("content", "Report name", DateTime.Now, Format.XML);
 
             Assert.Equal(Format.XML, report.Format);
+        }
+
+        private static Pipeline CreatePipeline()
+        {
+            var command = CreateCommand("Deploy", PipelineJobStatus.FINISHED, "Deploy done");
+            return new Pipeline(new List<PipelineJobCommand> { command.Object }, "first");
+        }
+
+        private static Mock<PipelineJobCommand> CreateCommand(string name, PipelineJobStatus status, string output)
+        {
+            var mock = new Mock<PipelineJobCommand>(name, "command");
+            mock.Setup(c => c.Execute()).Callback(() =>
+            {
+                SetCommandStatus(mock.Object, status);
+                SetCommandOutput(mock.Object, output);
+            });
+            return mock;
+        }
+
+        private static void SetCommandStatus(PipelineJobCommand command, PipelineJobStatus status)
+        {
+            typeof(PipelineJobCommand).GetProperty("Status")!.SetValue(command, status);
+        }
+
+        private static void SetCommandOutput(PipelineJobCommand command, string output)
+        {
+            typeof(PipelineJobCommand).GetProperty("Output")!.SetValue(command, output);
         }
     }
 }

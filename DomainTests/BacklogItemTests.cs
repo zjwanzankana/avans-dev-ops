@@ -1,5 +1,6 @@
 using Domain.Backlogs.BacklogItemStates;
 using Domain.Sprints;
+using Moq;
 using System;
 using System.Collections.Generic;
 
@@ -39,13 +40,13 @@ namespace DomainTests
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(7), productOwner, new List<Developer> { productOwner });
             sprint.AddToSprintBacklog(backlogItem);
 
-            var observer = new TestBacklogObserver();
-            backlogItem.Register(observer);
+            var observer = new Mock<IBacklogObserver>();
+            backlogItem.Register(observer.Object);
 
             backlogItem.ChangeState(new DoingState(backlogItem));
 
             Assert.Equal(EBacklogStates.doing, backlogItem.StateType);
-            Assert.Equal(EBacklogStates.doing, observer.LastState);
+            observer.Verify(o => o.Update(It.Is<BacklogItemState>(s => s.GetState() == EBacklogStates.doing)), Times.Once);
         }
 
         [Fact]
@@ -64,14 +65,5 @@ namespace DomainTests
             Assert.Empty(backlogItem.Activities);
         }
 
-        private sealed class TestBacklogObserver : IBacklogObserver
-        {
-            public EBacklogStates? LastState { get; private set; }
-
-            public void Update(BacklogItemState backlogItem)
-            {
-                LastState = backlogItem.GetState();
-            }
-        }
     }
 }

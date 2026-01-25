@@ -1,7 +1,7 @@
 using Domain.Pipelines;
-using Domain.Pipelines.PipelineCommands;
 using Domain.Sprints;
 using Domain.Sprints.SprintStates;
+using Moq;
 using System;
 using System.Collections.Generic;
 
@@ -59,10 +59,8 @@ namespace DomainTests
         {
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
-            var pipeline = new Pipeline(new List<PipelineJobCommand>
-            {
-                new PipelineJobAnalyzeCommand("Analyze", "analyze")
-            }, "release");
+            var pipelineCommand = CreateCommand("Analyze", PipelineJobStatus.FINISHED, "Analyze done");
+            var pipeline = new Pipeline(new List<PipelineJobCommand> { pipelineCommand.Object }, "release");
             var sprint = new ReleaseSprint(project, "Release 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner }, pipeline);
 
             sprint.State.NextState();
@@ -70,6 +68,7 @@ namespace DomainTests
 
             Assert.Equal(ESprintStates.Finished, sprint.State.GetSprintState());
             Assert.Equal(PipelineJobStatus.FINISHED, pipeline.Status);
+            pipelineCommand.Verify(c => c.Execute(), Times.Once);
         }
 
         [Fact]
@@ -108,10 +107,8 @@ namespace DomainTests
         {
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
-            var pipeline = new Pipeline(new List<PipelineJobCommand>
-            {
-                new PipelineJobAnalyzeCommand("Analyze", "analyze")
-            }, "release");
+            var pipelineCommand = CreateCommand("Analyze", PipelineJobStatus.FINISHED, "Analyze done");
+            var pipeline = new Pipeline(new List<PipelineJobCommand> { pipelineCommand.Object }, "release");
             var sprint = new ReleaseSprint(project, "Release 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner }, pipeline);
             var review = new Review("Looks good", productOwner, sprint);
 
@@ -127,10 +124,8 @@ namespace DomainTests
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner });
-            var pipeline = new Pipeline(new List<PipelineJobCommand>
-            {
-                new PipelineJobAnalyzeCommand("Analyze", "analyze")
-            }, "pipeline");
+            var pipelineCommand = CreateCommand("Analyze", PipelineJobStatus.FINISHED, "Analyze done");
+            var pipeline = new Pipeline(new List<PipelineJobCommand> { pipelineCommand.Object }, "pipeline");
 
             pipeline.SetStatus(PipelineJobStatus.Running);
             sprint.SetPipeline(pipeline);
@@ -138,6 +133,27 @@ namespace DomainTests
             Assert.Throws<InvalidOperationException>(() => sprint.SetName("Blocked"));
             Assert.Throws<InvalidOperationException>(() => sprint.SetStartDate(DateTime.Today.AddDays(1)));
             Assert.Throws<InvalidOperationException>(() => sprint.SetEndDate(DateTime.Today.AddDays(10)));
+        }
+
+        private static Mock<PipelineJobCommand> CreateCommand(string name, PipelineJobStatus status, string output)
+        {
+            var mock = new Mock<PipelineJobCommand>(name, "command");
+            mock.Setup(c => c.Execute()).Callback(() =>
+            {
+                SetCommandStatus(mock.Object, status);
+                SetCommandOutput(mock.Object, output);
+            });
+            return mock;
+        }
+
+        private static void SetCommandStatus(PipelineJobCommand command, PipelineJobStatus status)
+        {
+            typeof(PipelineJobCommand).GetProperty("Status")!.SetValue(command, status);
+        }
+
+        private static void SetCommandOutput(PipelineJobCommand command, string output)
+        {
+            typeof(PipelineJobCommand).GetProperty("Output")!.SetValue(command, output);
         }
     }
 }
