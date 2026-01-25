@@ -1,9 +1,9 @@
 {
   "files.exclude": {
-    // "**/bin/": true,
-    // "**/obj/": true,
-    // "**/*.sln": true,
-    // "**/*.csproj": true,
+    "**/bin/": true,
+    "**/obj/": true,
+    "**/*.sln": true,
+    "**/*.csproj": true,
 
 
 

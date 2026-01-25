@@ -33,6 +33,51 @@ namespace DomainTests
             Assert.Null(project.Forum);
         }
 
+        [Fact]
+        public void A_Project_Can_Create_A_Forum_Once()
+        {
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var project = new Project(productOwner, "Project 1");
+
+            project.CreateForum();
+
+            Assert.NotNull(project.Forum);
+            Assert.Throws<InvalidOperationException>(() => project.CreateForum());
+        }
+
+        [Fact]
+        public void A_Project_Can_Add_Testers()
+        {
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var tester = TestHelpers.CreateDeveloper("Jane", Role.Tester);
+            var project = new Project(productOwner, "Project 1");
+
+            project.AddTester(tester);
+
+            Assert.Single(project.Testers);
+        }
+
+        [Fact]
+        public void A_Project_Cannot_Add_Non_Testers()
+        {
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var developer = TestHelpers.CreateDeveloper("Jane", Role.Developer);
+            var project = new Project(productOwner, "Project 1");
+
+            Assert.Throws<InvalidOperationException>(() => project.AddTester(developer));
+        }
+
+        [Fact]
+        public void A_Project_Cannot_Add_The_Same_Tester_Twice()
+        {
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var tester = TestHelpers.CreateDeveloper("Jane", Role.Tester);
+            var project = new Project(productOwner, "Project 1");
+
+            project.AddTester(tester);
+
+            Assert.Throws<InvalidOperationException>(() => project.AddTester(tester));
+        }
 
     }
 }
