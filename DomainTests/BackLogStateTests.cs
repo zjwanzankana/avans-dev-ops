@@ -65,7 +65,7 @@ namespace DomainTests
 
             //Assert
             Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
-            Assert.Throws<Exception>(() => backlogItem.State.PreviousState());
+            Assert.Throws<InvalidOperationException>(() => backlogItem.State.PreviousState());
         }
 
         //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
@@ -94,7 +94,7 @@ namespace DomainTests
 
             //Assert
             Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
-            Assert.Throws<Exception>(() => backlogItem.State.NextState());
+            Assert.Throws<InvalidOperationException>(() => backlogItem.State.NextState());
         }
 
         //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
@@ -153,7 +153,7 @@ namespace DomainTests
             sprint.AddToSprintBacklog(backlogItem);
 
             //Assert
-            Assert.Throws<Exception>(() => backlogItem.State.NextState());
+            Assert.Throws<InvalidOperationException>(() => backlogItem.State.NextState());
 
         }
 
@@ -392,7 +392,7 @@ namespace DomainTests
 
             //Assert
             Assert.Equal(ActivityStatus.Todo, activity1.Status);
-            Assert.Throws<Exception>(() => backlogItem.State.NextState());
+            Assert.Throws<InvalidOperationException>(() => backlogItem.State.NextState());
         }
 
 
@@ -443,4 +443,3 @@ namespace DomainTests
         }
     }
 }
-

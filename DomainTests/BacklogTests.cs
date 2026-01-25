@@ -118,7 +118,7 @@ namespace DomainTests
             backlog.AddBacklogItem(backlogItem1);
      
             //Assert
-            Assert.Throws<Exception>(() => backlog.AddBacklogItem(backlogItem1));
+            Assert.Throws<InvalidOperationException>(() => backlog.AddBacklogItem(backlogItem1));
             Assert.Single(project.Backlog.BacklogItems);
         }
 

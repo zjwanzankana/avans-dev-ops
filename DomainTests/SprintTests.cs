@@ -219,7 +219,7 @@ namespace DomainTests
 
             //Assert
             Assert.Equal(ESprintStates.Scheduled, sprint.State.GetSprintState());
-            Assert.Throws<Exception>(() => sprint.State.PreviousState());
+            Assert.Throws<InvalidOperationException>(() => sprint.State.PreviousState());
         }
 
 
@@ -287,7 +287,7 @@ namespace DomainTests
 
 
             //Assert
-            Assert.Throws<Exception>(() => sprint.SetName("Finshed sprint2"));
+            Assert.Throws<InvalidOperationException>(() => sprint.SetName("Finshed sprint2"));
         }
 
 
@@ -388,7 +388,7 @@ namespace DomainTests
             var review = new Review("This is the review", productOwner, sprint);
 
             //Assert
-            Assert.Throws<Exception>(() => sprint.SetReviewItem(review));
+            Assert.Throws<InvalidOperationException>(() => sprint.SetReviewItem(review));
         }
     }
 }
