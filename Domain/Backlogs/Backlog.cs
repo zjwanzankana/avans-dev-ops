@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace Domain.Backlogs
 {
-    public  class Backlog
+    public class Backlog
     {
         private readonly List<BacklogItem> _backlogItems;
         private readonly Project _project;
@@ -20,7 +18,7 @@ namespace Domain.Backlogs
         public void AddBacklogItem(BacklogItem backlogItem)
         {
             if (_backlogItems.Contains(backlogItem))
-                throw new Exception("Can't add the same backlogItem twice");
+                throw new InvalidOperationException("Can't add the same backlogItem twice");
 
             _backlogItems.Add(backlogItem);
         }
@@ -29,20 +27,14 @@ namespace Domain.Backlogs
         { 
             if(!_backlogItems.Contains(backlogItem))
             {
-                throw new Exception("BacklogItem not found");
+                throw new KeyNotFoundException("BacklogItem not found");
             }
 
             _backlogItems.Remove(backlogItem);
         }
 
-        public List<BacklogItem> GetBacklogItems()
-        {
-            return _backlogItems;
-        }
+        public ReadOnlyCollection<BacklogItem> BacklogItems => _backlogItems.AsReadOnly();
 
-        public Project GetProject()
-        {
-            return _project;
-        }
+        public Project Project => _project;
     }
 }

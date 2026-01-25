@@ -1,13 +1,12 @@
-﻿namespace Domain.Backlogs.BacklogItemStates
+﻿using System;
+
+namespace Domain.Backlogs.BacklogItemStates
 {
     public class TestedState : BacklogItemState
     {
-        private readonly BacklogItem _backlogItem;
-
         public TestedState(BacklogItem backlogItem) : base(backlogItem)
         {
             // Lead dev checks DOD
-            _backlogItem = backlogItem;
         }
 
         public override EBacklogStates GetState()
@@ -17,19 +16,19 @@
         public override void NextState()
         {
             //only allow next state when all activities are done
-            if (_backlogItem.AllActivitiesDone())
+            if (BacklogItem.AllActivitiesDone())
             {
-                _backlogItem.ChangeState(new DoneState(_backlogItem));
+                BacklogItem.ChangeState(new DoneState(BacklogItem));
             }
             else
             {
-                throw new System.Exception("Can't go to next state when not all activities are done");
+                throw new InvalidOperationException("Can't go to next state when not all activities are done");
             }
         }
 
         public override void PreviousState()
         {
-            _backlogItem.ChangeState(new ReadyForTestingState(_backlogItem));
+            BacklogItem.ChangeState(new ReadyForTestingState(BacklogItem));
         }
     }
 }

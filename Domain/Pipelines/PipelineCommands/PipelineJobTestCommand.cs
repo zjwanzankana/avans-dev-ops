@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Pipelines.PipelineCommands
 {
@@ -17,21 +13,21 @@ namespace Domain.Pipelines.PipelineCommands
 
         public override void Execute()
         {
-            base.SetStatus(PipelineJobStatus.Running);
+            Status = PipelineJobStatus.Running;
 
-            Console.WriteLine($"Running command {base.GetName()} type {this.GetType().Name} with command {base.GetCommand()}");
+            Console.WriteLine($"Running command {Name} type {GetType().Name} with command {Command}");
 
-            base.SetStatus(PipelineJobStatus.Running);
+            Status = PipelineJobStatus.Running;
 
             if (_isSucces)
             {
-                base.SetOutput("Sources succesfully retrieved");
-                base.SetStatus(PipelineJobStatus.FINISHED);
+                Output = "Sources succesfully retrieved";
+                Status = PipelineJobStatus.FINISHED;
             }
             else
             {
-                base.SetOutput("Sources unsuccesfully retrieved");
-                base.SetStatus(PipelineJobStatus.FAILED);
+                Output = "Sources unsuccesfully retrieved";
+                Status = PipelineJobStatus.FAILED;
             }
         }
 

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.SCM
+﻿namespace Domain.SCM
 {
-    public interface BranchObservable
+    public interface IBranchObservable
     {
-        void Register(BranchObserver observer);
-        void UnRegister(BranchObserver observer);
+        void Register(IBranchObserver observer);
+        void UnRegister(IBranchObserver observer);
 
         void Notify();
     }

@@ -1,4 +1,4 @@
-﻿using Domain.Pipelines;
+using Domain.Pipelines;
 using Domain.Pipelines.PipelineCommands;
 using Domain.Sprints;
 using System;
@@ -18,7 +18,7 @@ namespace DomainTests
         public void A_Pipeline_Can_Be_Created()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -31,7 +31,7 @@ namespace DomainTests
             pipeline.Execute();
 
             //Assert
-            Assert.True(pipeline.GetCommands().Count ==1);
+            Assert.True(pipeline.Commands.Count ==1);
         }
 
         //•	De acties worden correct uitgevoerd volgens de gedefinieerde volgorde in de pipeline.
@@ -39,7 +39,7 @@ namespace DomainTests
         public void A_Pipeline_Can_Be_Executed()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -53,7 +53,7 @@ namespace DomainTests
             pipeline.Execute();
 
             //Assert
-            Assert.True(pipelineCommand1.GetStatus() == PipelineJobStatus.FINISHED);
+            Assert.True(pipelineCommand1.Status == PipelineJobStatus.FINISHED);
         }
 
 
@@ -65,7 +65,7 @@ namespace DomainTests
         public void A_Pipeline_Can_Be_Added_To_A_Sprint()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -81,7 +81,7 @@ namespace DomainTests
             sprint.SetPipeline(pipeline);
 
             //Assert
-            Assert.Equal(sprint.GetPipeline(), pipeline);
+            Assert.Equal(sprint.Pipeline, pipeline);
         }
         
     }

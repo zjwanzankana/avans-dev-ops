@@ -1,4 +1,4 @@
-﻿using Domain.Sprints;
+using Domain.Sprints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +16,16 @@ namespace DomainTests
         public void A_BacklogItem_Gets_Status_Todo_When_Added_To_A_Sprint()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -35,7 +35,7 @@ namespace DomainTests
             sprint.AddToSprintBacklog(backlogItem);
 
             //Assert
-            Assert.Equal(EBacklogStates.todo, backlogItem.GetStateType());
+            Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
         }
 
 
@@ -44,16 +44,16 @@ namespace DomainTests
         public void A_BacklogItem_Cant_Go_To_Previous_State_From_Todo_State()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -64,8 +64,8 @@ namespace DomainTests
             sprint.AddToSprintBacklog(backlogItem);
 
             //Assert
-            Assert.Equal(EBacklogStates.todo, backlogItem.GetStateType());
-            Assert.Throws<Exception>(() => backlogItem.GetState().PreviousState());
+            Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
+            Assert.Throws<Exception>(() => backlogItem.State.PreviousState());
         }
 
         //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
@@ -74,16 +74,16 @@ namespace DomainTests
         public void A_BacklogItem_Cannot_Change_State_When_Not_Added_To_Sprint()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -93,8 +93,8 @@ namespace DomainTests
 
 
             //Assert
-            Assert.Equal(EBacklogStates.todo, backlogItem.GetStateType());
-            Assert.Throws<Exception>(() => backlogItem.GetState().NextState());
+            Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
+            Assert.Throws<Exception>(() => backlogItem.State.NextState());
         }
 
         //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
@@ -102,16 +102,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_Todo_To_Doing()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -121,10 +121,10 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
+            backlogItem.State.NextState();
 
             //Assert
-            Assert.Equal(EBacklogStates.doing, backlogItem.GetStateType());
+            Assert.Equal(EBacklogStates.doing, backlogItem.StateType);
 
         }
 
@@ -133,16 +133,16 @@ namespace DomainTests
         public void A_BacklogItem_Cannot_Change_State_From_Doing_To_ReadyForTesting_When_NoDeveloperAssigned()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -153,7 +153,7 @@ namespace DomainTests
             sprint.AddToSprintBacklog(backlogItem);
 
             //Assert
-            Assert.Throws<Exception>(() => backlogItem.GetState().NextState());
+            Assert.Throws<Exception>(() => backlogItem.State.NextState());
 
         }
 
@@ -162,16 +162,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_Doing_To_ReadyForTesting()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -181,11 +181,11 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
 
             //Assert
-            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.GetStateType());
+            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.StateType);
 
         }
 
@@ -194,16 +194,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_ReadyForTesting_To_Testing()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -212,12 +212,12 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
 
             //Assert
-            Assert.Equal(EBacklogStates.testing, backlogItem.GetStateType());
+            Assert.Equal(EBacklogStates.testing, backlogItem.StateType);
 
         }
 
@@ -226,16 +226,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_Testing_To_Tested()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -245,13 +245,13 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
 
             //Assert
-            Assert.Equal(EBacklogStates.tested, backlogItem.GetStateType());
+            Assert.Equal(EBacklogStates.tested, backlogItem.StateType);
 
         }
 
@@ -260,16 +260,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_Tested_To_Done()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -279,14 +279,14 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
 
             //Assert
-            Assert.Equal(EBacklogStates.done, backlogItem.GetStateType());
+            Assert.Equal(EBacklogStates.done, backlogItem.StateType);
         }
 
         //•	Wanneer een item in readyfortesting toch niet af is gaat deze terug naar de todo fase
@@ -294,16 +294,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_ReadyForTesting_To_Todo_When_Not_Finished()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -313,13 +313,13 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().PreviousState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.PreviousState();
 
             //Assert
-            Assert.Equal(EBacklogStates.todo, backlogItem.GetStateType());
+            Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
         }
 
         //•	Wanneer een item in de tested fase niet voldoet aan de DOD gaat hij terug naar de ready for testing fase.
@@ -327,16 +327,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_Tested_To_ReadyForTesting_When_Not_Done()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -346,14 +346,14 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().NextState();
-            backlogItem.GetState().PreviousState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.NextState();
+            backlogItem.State.PreviousState();
 
             //Assert
-            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.GetStateType());
+            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.StateType);
         }
 
 
@@ -362,16 +362,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_Tested_To_ReadyForTesting_When_Not_All_Activities_Done()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -387,12 +387,12 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
+            backlogItem.State.NextState();
 
 
             //Assert
-            Assert.Equal(ActivityStatus.Todo, activity1.GetStatus());
-            Assert.Throws<Exception>(() => backlogItem.GetState().NextState());
+            Assert.Equal(ActivityStatus.Todo, activity1.Status);
+            Assert.Throws<Exception>(() => backlogItem.State.NextState());
         }
 
 
@@ -401,16 +401,16 @@ namespace DomainTests
         public void A_BacklogItem_Can_Change_State_From_Tested_To_ReadyForTesting_When_All_Activities_Done()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
@@ -427,19 +427,19 @@ namespace DomainTests
             //Act
             project.AddSprint(sprint);
             sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.GetState().NextState();
+            backlogItem.State.NextState();
 
             activity1.NextStatus();
             activity1.NextStatus();
             activity2.NextStatus();
             activity2.NextStatus();
 
-            backlogItem.GetState().NextState();
+            backlogItem.State.NextState();
 
             //Assert
-            Assert.Equal(ActivityStatus.Done, activity1.GetStatus());
-            Assert.Equal(ActivityStatus.Done, activity2.GetStatus());
-            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.GetStateType());
+            Assert.Equal(ActivityStatus.Done, activity1.Status);
+            Assert.Equal(ActivityStatus.Done, activity2.Status);
+            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.StateType);
         }
     }
 }

@@ -4,6 +4,7 @@ using Domain.Notifications;
 using Domain.Sprints;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Domain.Backlogs
 {
@@ -34,21 +35,17 @@ namespace Domain.Backlogs
             _activities = new List<Activity>();
         }
 
-        public void SetSprint(Sprint sprint)
+        public Sprint Sprint
         {
-            _sprint = sprint;
-        }
-
-        public Sprint GetSprint()
-        {
-            return _sprint;
+            get => _sprint;
+            set => _sprint = value;
         }
 
         public bool AllActivitiesDone()
         {
             foreach (Activity activity in _activities)
             {
-               if (activity.GetStatus() != ActivityStatus.Done) 
+               if (activity.Status != ActivityStatus.Done) 
                 {
                     return false;
                 }
@@ -60,7 +57,7 @@ namespace Domain.Backlogs
         {
             foreach (Activity activity in _activities)
             {
-                if (activity.GetStatus() != ActivityStatus.Todo)
+                if (activity.Status != ActivityStatus.Todo)
                 {
                     return false;
                 }
@@ -68,34 +65,22 @@ namespace Domain.Backlogs
             return true;
         }
 
-        public void SetName(string name)
+        public string Name
         {
-            _name = name;
+            get => _name;
+            set => _name = value;
         }
 
-        public string GetName()
+        public string Description
         {
-            return _name;
+            get => _description;
+            set => _description = value;
         }
 
-        public void SetDescription(string description)
+        public int Effort
         {
-            _description = description;
-        }
-
-        public string GetDescription()
-        {
-            return _description;
-        }
-
-        public void SetEffort(int effort)
-        {
-            _effort = effort;
-        }
-
-        public int GetEffort()
-        {
-            return _effort;
+            get => _effort;
+            set => _effort = value;
         }
 
         public void AssignDeveloper(Developer newAssignedDeveloper)
@@ -104,36 +89,24 @@ namespace Domain.Backlogs
             Register(new Notificator(_assignedDeveloper));
         }
 
-        public Developer GetAssignedDeveloper()
-        {
-            return _assignedDeveloper;
-        }
+        public Developer AssignedDeveloper => _assignedDeveloper;
 
         public void ChangeState(BacklogItemState state)
         {
             //The state of the backlogItem can only be changed once it has a sprint reference
             if (_sprint == null)
             { 
-                throw new Exception("The backlogItem is not part a sprint so state can't be changed");
+                throw new InvalidOperationException("The backlogItem is not part a sprint so state can't be changed");
             }
             _state = state;
             Notify();
         }
 
-        public EBacklogStates GetStateType()
-        {
-            return _state.GetState();
-        }
+        public EBacklogStates StateType => _state.GetState();
 
-        public BacklogItemState GetState()
-        {
-            return _state;
-        }
+        public BacklogItemState State => _state;
 
-        public List<Activity> GetActivities()
-        {
-            return _activities;
-        }
+        public ReadOnlyCollection<Activity> Activities => _activities.AsReadOnly();
 
         public void AddActivity(Activity activity)
         {
@@ -167,7 +140,7 @@ namespace Domain.Backlogs
         {
             foreach (var observer in _observers)
             {
-                observer.Update(this.GetState());                
+                observer.Update(State);                
             }
         }
     }

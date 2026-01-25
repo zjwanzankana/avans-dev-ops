@@ -9,9 +9,6 @@
             this._code = code;
         }
 
-        public string GetCode()
-        {
-            return this._code;
-        }
+        public string Content => _code;
     }
 }

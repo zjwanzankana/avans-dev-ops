@@ -11,7 +11,7 @@ namespace Domain.Sprints
 {
     public class ReleaseSprint : Sprint
     {
-        public ReleaseSprint(Project project, string name, DateTime startDate, DateTime endDate, Developer scrumMaster, List<Developer> developers, Pipeline pipeline) : base(project, name, startDate, endDate, scrumMaster, developers)
+        public ReleaseSprint(Project project, string name, DateTime startDate, DateTime endDate, Developer scrumMaster, IReadOnlyList<Developer> developers, Pipeline pipeline) : base(project, name, startDate, endDate, scrumMaster, developers)
         {
             base.SetPipeline(pipeline);
         }

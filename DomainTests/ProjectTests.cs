@@ -1,4 +1,4 @@
-﻿using Domain;
+using Domain;
 using Domain.Developers;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace DomainTests
         public void Creating_A_Project_Should_Not_Throw_An_Exception()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
 
             //Act
@@ -24,13 +24,13 @@ namespace DomainTests
 
             //Assert
             Assert.NotNull(project);
-            Assert.Equal(project.GetName(), name);
-            Assert.NotNull(project.GetBacklog());
-            Assert.NotNull(project.GetRepository());
-            Assert.NotNull(project.GetPipelines());
-            Assert.Equal(project.GetProductOwner(), productOwner);
+            Assert.Equal(project.Name, name);
+            Assert.NotNull(project.Backlog);
+            Assert.NotNull(project.Repository);
+            Assert.NotNull(project.Pipelines);
+            Assert.Equal(project.ProductOwner, productOwner);
 
-            Assert.Null(project.GetForum());
+            Assert.Null(project.Forum);
         }
 
 

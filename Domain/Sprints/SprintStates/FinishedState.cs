@@ -1,42 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Sprints.SprintStates
 {
-    internal class FinishedState : SprintState
+    internal sealed class FinishedState : SprintState
     {
         private readonly Sprint _sprint;
-
-#warning pipeline
 
         public FinishedState(Sprint sprint) : base(sprint)
         {
             _sprint = sprint;
+            
+            // Pipeline execution wordt gestart via ReleaseSprint.Pipeline.Execute()
         }
 
         public override void SetReview(Review review)
         {
             if (_sprint.GetType().Name == "ReviewSprint")
             {
-                if (review.Author == _sprint.GetScrumMaster())
+                if (review.Author == _sprint.ScrumMaster)
                 {
                     ((ReviewSprint)_sprint).AddReview(review);
                 }
                 else
                 {
-                    throw new Exception("Only scrummaster can add a review");
+                    throw new InvalidOperationException("Only scrummaster can add a review");
                 }
             }
-            throw new Exception("Review can't be added to release sprint");
+            throw new InvalidOperationException("Review can't be added to release sprint");
         }
 
         public override void NextState()
         {
-            throw new Exception($"No next state for {GetSprintState()} state");
+            throw new InvalidOperationException($"No next state for {GetSprintState()} state");
         }
 
         public override void PreviousState()
@@ -49,12 +44,12 @@ namespace Domain.Sprints.SprintStates
             switch (_sprint.GetType().Name)
             {
                 case "ReleaseSprint":
-                    _sprint.GetPipeline().Execute();
+                    _sprint.Pipeline.Execute();
                     break;
                 case "ReviewSprint":
-                    if (_sprint.GetPipeline() != null)
+                    if (_sprint.Pipeline != null)
                     { 
-                        _sprint.GetPipeline().Execute();
+                        _sprint.Pipeline.Execute();
                     }
                     break;
             }

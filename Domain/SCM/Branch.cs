@@ -3,55 +3,48 @@ using System.Collections.Generic;
 
 namespace Domain.SCM
 {
-    public class Branch : BranchObservable
+    public class Branch : IBranchObservable
     {
         private string _name;
         private DateTime _changeDate;
         private Code _code;
 
-        private List<BranchObserver> _observers;
+        private readonly List<IBranchObserver> _observers;
 
         public Branch(string name)
         {
             this._name = name;
             this._changeDate = DateTime.Now;
             this._code = new Code("");
+            this._observers = new List<IBranchObserver>();
         }
 
+        public string Name => _name;
 
-        public string GetName()
-        {
-            return this._name;
-        }
+        public DateTime ChangeDate => _changeDate;
 
-        public DateTime GetChangeDate()
-        {
-            return this._changeDate;
-        }
-
-        public Code GetCode()
-        {
-            return this._code;
-        }
+        public Code Code => _code;
 
         public void PushCommit(Commit commit)
         {
-#warning implment
+            // Add commit logic here if needed in future
+            _changeDate = DateTime.Now;
+            Notify();
         }
 
-        public void Register(BranchObserver observer)
+        public void Register(IBranchObserver observer)
         {
             _observers.Add(observer);
         }
 
-        public void UnRegister(BranchObserver observer)
+        public void UnRegister(IBranchObserver observer)
         {
             _observers.Remove(observer);
         }
 
         public void Notify()
         {
-           foreach(BranchObserver observer in _observers)
+           foreach(IBranchObserver observer in _observers)
             {
                 observer.Update();
             }

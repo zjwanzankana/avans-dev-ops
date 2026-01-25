@@ -1,18 +1,11 @@
-﻿using Domain.Backlogs;
-using Domain.Developers;
-using Domain.Notifications;
-using System;
+﻿using System;
 
 namespace Domain.Backlogs.BacklogItemStates
 {
     public class ReadyForTestingState : BacklogItemState
     {
-        private readonly BacklogItem _backlogItem;
         public ReadyForTestingState(BacklogItem backlogItem) : base(backlogItem)
         {
-            _backlogItem = backlogItem;
-
-           
         }
 
         public override EBacklogStates GetState()
@@ -22,28 +15,28 @@ namespace Domain.Backlogs.BacklogItemStates
 
         public override void AddActivity(Activity activity)
         { 
-            throw new Exception("Can't add activity when ready to test");
+            throw new InvalidOperationException("Can't add activity when ready to test");
         }
 
         public override void NextState()
         {
             // Only allow next state when all activities are done or active
-            if (_backlogItem.AllActivitiesDoneOrActive())
+            if (BacklogItem.AllActivitiesDoneOrActive())
             {
-                _backlogItem.ChangeState(new TestingState(_backlogItem));
+                BacklogItem.ChangeState(new TestingState(BacklogItem));
             }
             else
             {
-                throw new Exception("Can't go to next state when not all activities are done or active");
+                throw new InvalidOperationException("Can't go to next state when not all activities are done or active");
             }
         }
 
         public override void PreviousState()
         {
-            var scrumMaster = _backlogItem.GetSprint().GetScrumMaster();
-            scrumMaster.SendNotification($"Hello {scrumMaster.GetName()} something is wrong with backlogitem: {_backlogItem.GetName()}");
+            var scrumMaster = BacklogItem.Sprint.ScrumMaster;
+            scrumMaster.SendNotification($"Hello {scrumMaster.Name} something is wrong with backlogitem: {BacklogItem.Name}");
 
-            _backlogItem.ChangeState(new TodoState(_backlogItem));
+            BacklogItem.ChangeState(new TodoState(BacklogItem));
         }
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SHlIqUg+u+0=",
+  "dgSpecHash": "QdJUPCM4JhE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\DomainTests.csproj",
+  "projectFilePath": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp & architectuur 3\\avans-dev-ops\\DomainTests\\DomainTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\zjwanz\\.nuget\\packages\\coverlet.collector\\3.2.0\\coverlet.collector.3.2.0.nupkg.sha512",
     "C:\\Users\\zjwanz\\.nuget\\packages\\microsoft.codecoverage\\17.5.0\\microsoft.codecoverage.17.5.0.nupkg.sha512",

@@ -4,10 +4,14 @@
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>Domain</RootNamespace>
     <AssemblyName>Domain</AssemblyName>
+
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisMode>All</AnalysisMode>
   </PropertyGroup>
 
-  <ItemGroup><!-- Add any necessary project references or packages here -->
-  
+  <ItemGroup>    <!-- Add any necessary project references or packages here -->
+
     <Folder Include="Properties\" />
   </ItemGroup>
 

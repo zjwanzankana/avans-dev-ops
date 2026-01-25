@@ -11,19 +11,19 @@ namespace Domain.Reports
 {
     public static class ReportBuilderDirector
     {
-        public static Report BuildAvansReport(Sprint sprint, string content, string reportName, DateTime date, Format format)
+        public static Report BuildAvansReport(Sprint sprint, string content, string reportName, DateTime reportDate, Format format)
         { 
-            IReportBuilder builder = new DeploymentReportBuilder();
-            builder.BuildHeader(date, sprint, reportName);
+            var builder = new DeploymentReportBuilder();
+            builder.BuildHeader(reportDate, sprint, reportName);
             builder.BuildBody(content);
             builder.BuildFooter();
             return builder.GetReport(format);
         }
 
-        public static Report BuildStudentReport(Sprint sprint, string content, string reportName, DateTime date, Format format)
+        public static Report BuildStudentReport(Sprint sprint, string content, string reportName, DateTime reportDate, Format format)
         {
-            IReportBuilder builder = new ReviewReportBuilder();
-            builder.BuildHeader(date, sprint, reportName);
+            var builder = new ReviewReportBuilder();
+            builder.BuildHeader(reportDate, sprint, reportName);
             builder.BuildBody(content);
             builder.BuildFooter();
             return builder.GetReport(format);

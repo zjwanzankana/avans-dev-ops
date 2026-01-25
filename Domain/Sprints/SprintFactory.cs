@@ -2,21 +2,27 @@
 using Domain.Pipelines;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Domain.Sprints
 {
-    public class SprintFactory
+    /// <summary>
+    /// Factory voor het creëren van verschillende sprint types.
+    /// Implementeert het Factory design pattern.
+    /// </summary>
+    public static class SprintFactory
     {
-        public ReleaseSprint GetReleaseSprint(Project project, string name, DateTime startDate, DateTime endDate,Developer scumMaster, List<Developer> developers, Pipeline pipeline)
+        /// <summary>
+        /// Creëert een ReleaseSprint met een gekoppelde deployment pipeline.
+        /// </summary>
+        public static ReleaseSprint GetReleaseSprint(Project project, string name, DateTime startDate, DateTime endDate, Developer scumMaster, IReadOnlyList<Developer> developers, Pipeline pipeline)
         {
             return new ReleaseSprint(project, name,startDate,endDate, scumMaster, developers, pipeline);
         }
 
-        public ReviewSprint GetReviewSprint(Project project, string name, DateTime startDate, DateTime endDate, Developer scumMaster, List<Developer> developers)
+        /// <summary>
+        /// Creëert een ReviewSprint zonder deployment pipeline.
+        /// </summary>
+        public static ReviewSprint GetReviewSprint(Project project, string name, DateTime startDate, DateTime endDate, Developer scumMaster, IReadOnlyList<Developer> developers)
         {
             return new ReviewSprint(project, name, startDate, endDate, scumMaster, developers);
         }

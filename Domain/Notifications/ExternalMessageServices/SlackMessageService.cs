@@ -1,6 +1,5 @@
 ﻿using Domain.Developers;
 using Domain.Notifications;
-using Domain.Notifications.ExternalMessageServices;
 using System;
 
 namespace Domain.MessageServices
@@ -9,7 +8,9 @@ namespace Domain.MessageServices
     {
         public void SendNotification(string message , Developer developer)
         {
-            Console.WriteLine($"Slack message: {message} send to {developer.GetName()}");
+            ArgumentNullException.ThrowIfNull(developer);
+
+            Console.WriteLine($"Slack message: {message} send to {developer.Name}");
         }
     }
 }

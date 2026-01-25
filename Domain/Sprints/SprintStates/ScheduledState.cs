@@ -48,12 +48,12 @@ namespace Domain.Sprints.SprintStates
 
         public override void PreviousState()
         {
-            throw new Exception($"No previous state for Scheduled state");
+            throw new InvalidOperationException("No previous state for Scheduled state");
         }
 
         public override void StartStateAction()
         {
-            throw new Exception($"No action for Scheduled state");
+            throw new InvalidOperationException("No action for Scheduled state");
         }
 
         public override ESprintStates GetSprintState()

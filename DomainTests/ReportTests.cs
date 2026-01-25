@@ -1,5 +1,6 @@
-﻿using Domain.Pipelines;
+using Domain.Pipelines;
 using Domain.Pipelines.PipelineCommands;
+using Domain.Reports;
 using Domain.Sprints;
 using Microsoft.VisualBasic;
 using System;
@@ -19,16 +20,16 @@ namespace DomainTests
         {
             //Arrange
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
 
             //Act
@@ -45,7 +46,7 @@ namespace DomainTests
         public void A_Report_Can_Have_A_Header_And_A_Footer()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -67,7 +68,7 @@ namespace DomainTests
         public void A_Report_Can_Have_A_Header_And_A_Footer_With_Information()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -78,10 +79,10 @@ namespace DomainTests
             var report = sprint.GenerateReviewReport("content", "Report name", DateTime.Now, Format.PDF);
 
             report.Header.companyname = "Avans";
-            report.Footer.companyLogo = "Logo";
+            report.Footer.CompanyLogo = "Logo";
 
             Assert.Equal("Avans", report.Header.companyname);
-            Assert.Equal("Logo", report.Footer.companyLogo);
+            Assert.Equal("Logo", report.Footer.CompanyLogo);
         }
 
         //FR_R3 Het systeem moet de mogelijkheid bieden om de gegenereerde rapporten op te slaan in verschillende formaten, zoals pdf en png.
@@ -90,7 +91,7 @@ namespace DomainTests
         public void A_Report_Can_Be_Saved_In_PDF_Formats()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -107,7 +108,7 @@ namespace DomainTests
         public void A_Report_Can_Be_Saved_In_PNG_Formats()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -125,7 +126,7 @@ namespace DomainTests
         public void A_Report_Can_Be_Saved_In_XML_Formats()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -144,16 +145,16 @@ namespace DomainTests
         {
             //Arrange
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
 
-            var developer1 = new Developer("Hans", Role.Developer);
-            var developer2 = new Developer("Jan", Role.Developer);
-            var developer3 = new Developer("Hans2", Role.Tester);
+            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
+            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
             var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
 
             var name = "Project 1";
             var project = new Project(productOwner, name);
-            var backlog = project.GetBacklog();
+            var backlog = project.Backlog;
             var pipeline = new Pipeline(new List<PipelineJobCommand> { new PipelineJobDeployCommand("test", "test.exe -t") }, "first");
             var sprint = new ReleaseSprint(project, name, DateTime.Now, DateTime.Now.AddDays(14), productOwner, new List<Developer> { productOwner }, pipeline);
 
@@ -171,7 +172,7 @@ namespace DomainTests
         public void A_ReleaseReport_Can_Have_A_Header_And_A_Footer()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -194,7 +195,7 @@ namespace DomainTests
         public void A_RealeaseReport_Can_Have_A_Header_And_A_Footer_With_Information()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -206,10 +207,10 @@ namespace DomainTests
             var report = sprint.GenerateDeploymentReport("content", "Report name", DateTime.Now, Format.PDF);
 
             report.Header.companyname = "Avans";
-            report.Footer.companyLogo = "Logo";
+            report.Footer.CompanyLogo = "Logo";
 
             Assert.Equal("Avans", report.Header.companyname);
-            Assert.Equal("Logo", report.Footer.companyLogo);
+            Assert.Equal("Logo", report.Footer.CompanyLogo);
         }
 
         //FR_R3 Het systeem moet de mogelijkheid bieden om de gegenereerde rapporten op te slaan in verschillende formaten, zoals pdf en png.
@@ -218,7 +219,7 @@ namespace DomainTests
         public void A_ReleaseReport_Can_Be_Saved_In_PDF_Formats()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -236,7 +237,7 @@ namespace DomainTests
         public void A_ReleaseReport_Can_Be_Saved_In_PNG_Formats()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 
@@ -255,7 +256,7 @@ namespace DomainTests
         public void A_ReleaseReport_Can_Be_Saved_In_XML_Formats()
         {
             //Arrange
-            var productOwner = new Developer("John", Role.Developer);
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var name = "Project 1";
             var project = new Project(productOwner, name);
 

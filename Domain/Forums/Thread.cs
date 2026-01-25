@@ -2,9 +2,7 @@
 using Domain.Developers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace Domain.Forums
 {
@@ -27,21 +25,23 @@ namespace Domain.Forums
 
         public void AddComment(Comment comment)
         {
+            ArgumentNullException.ThrowIfNull(comment);
+
             //if comment is null or whitespace throw exception
-            if (string.IsNullOrWhiteSpace(comment.GetText()))
+            if (string.IsNullOrWhiteSpace(comment.Text))
             {
-                throw new Exception("Comment can't be null or whitespace");
+                throw new ArgumentException("Comment can't be null or whitespace", nameof(comment));
             }
 
             //if activity is done dont allow comments
-            if (_activity.GetStatus() == ActivityStatus.Done)
+            if (_activity.Status == ActivityStatus.Done)
             {
-                throw new Exception("Can't add comments to done activities");
+                throw new InvalidOperationException("Can't add comments to done activities");
             }
 
             foreach (var c in _comments)
             {
-                c.GetAuthor().SendNotification($"New comment from {comment.GetAuthor().GetName()} has been posted to thread: {_title}");
+                c.Author.SendNotification($"New comment from {comment.Author.Name} has been posted to thread: {_title}");
             }
 
             _comments.Add(comment);
@@ -51,36 +51,24 @@ namespace Domain.Forums
         { 
             if (!_comments.Contains(comment))
             {
-                throw new Exception("Comment does not exist");
+                throw new InvalidOperationException("Comment does not exist");
             }
 
-            if (_activity.GetStatus() == ActivityStatus.Done)
+            if (_activity.Status == ActivityStatus.Done)
             {
-                throw new Exception("Can't delete comments from done activities");
+                throw new InvalidOperationException("Can't delete comments from done activities");
             }
 
             _comments.Remove(comment);
         }
 
-        public List<Comment> GetComments()
-        {
-            return _comments;
-        }
+        public ReadOnlyCollection<Comment> Comments => _comments.AsReadOnly();
 
-        public Activity GetActivity()
-        {
-            return _activity;
-        }
+        public Activity Activity => _activity;
 
-        public string GetTitle()
-        {
-            return _title;
-        }
+        public string Title => _title;
 
-        public DateTime GetCreationDate()
-        {
-            return _creationDate;
-        }
+        public DateTime CreationDate => _creationDate;
 
 
     }

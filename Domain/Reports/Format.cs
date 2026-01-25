@@ -1,6 +1,9 @@
-﻿    public enum Format
+﻿    namespace Domain.Reports
     {
-        PDF,
-        PNG,
-        XML
+        public enum Format
+        {
+            PDF,
+            PNG,
+            XML
+        }
     }

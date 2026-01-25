@@ -14,45 +14,40 @@ namespace Domain.Backlogs
             _description = description;
         }
 
-        //Set discription but one when _status is done
-        public void SetDescription(string description)
+        // Set description but not when _status is done
+        public string Description
         {
-            if (_status != ActivityStatus.Done)
+            get => _description;
+            set
             {
-                _description = description;
-            }
-            else 
-            {
-                throw new Exception("Activity is done, cannot change description when DONE");
-            }
-        }
-
-        public string GetDescription()
-        {
-            return _description;
-        }
-
-        public Developer GetAssignedDeveloper()
-        {
-            return _assignedDeveloper;
-        }
-
-        public void SetAssignedDeveloper(Developer developer)
-        {
-            if (_status != ActivityStatus.Done)
-            {
-                _assignedDeveloper = developer;
-            }
-            else
-            {
-                throw new Exception("Activity is done, cannot change developer when DONE");
+                if (_status != ActivityStatus.Done)
+                {
+                    _description = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Activity is done, cannot change description when DONE");
+                }
             }
         }
 
-        public ActivityStatus GetStatus()
+        public Developer AssignedDeveloper
         {
-            return _status;
+            get => _assignedDeveloper;
+            set
+            {
+                if (_status != ActivityStatus.Done)
+                {
+                    _assignedDeveloper = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Activity is done, cannot change developer when DONE");
+                }
+            }
         }
+
+        public ActivityStatus Status => _status;
 
 
         public void NextStatus()
@@ -66,7 +61,7 @@ namespace Domain.Backlogs
                     _status = ActivityStatus.Done;
                     break;
                 case ActivityStatus.Done:
-                    throw new Exception("Activity is already done");
+                    throw new InvalidOperationException("Activity is already done");
             }
         }
 
@@ -75,7 +70,7 @@ namespace Domain.Backlogs
             switch (_status)
             {
                 case ActivityStatus.Todo:
-                    throw new Exception("Activity is already todo");
+                    throw new InvalidOperationException("Activity is already todo");
                 case ActivityStatus.Active:
                     _status = ActivityStatus.Todo;
                     break;

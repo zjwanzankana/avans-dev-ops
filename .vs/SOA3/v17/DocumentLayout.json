@@ -1,17 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\",
+  "WorkspaceRootPath": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\repos\\avans-dev-ops\\domain\\reports\\format.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\iclouddrive\\school\\3. software ontwerp \u0026 architectuur 3\\avans-dev-ops\\domain\\backlogs\\backlogitemstates\\donestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\backlogs\\backlogitemstates\\donestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|c:\\users\\zjwanz\\iclouddrive\\school\\3. software ontwerp \u0026 architectuur 3\\avans-dev-ops\\domain\\reports\\format.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3F08F6C3-2E90-4C41-A043-E4CEADDAF759}|Domain\\Domain.csproj|solutionrelative:domain\\reports\\format.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|c:\\users\\zjwanz\\repos\\avans-dev-ops\\domaintests\\reporttests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|c:\\users\\zjwanz\\iclouddrive\\school\\3. software ontwerp \u0026 architectuur 3\\avans-dev-ops\\domaintests\\reporttests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|solutionrelative:domaintests\\reporttests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|c:\\users\\zjwanz\\repos\\avans-dev-ops\\domaintests\\backlogtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|c:\\users\\zjwanz\\iclouddrive\\school\\3. software ontwerp \u0026 architectuur 3\\avans-dev-ops\\domaintests\\backlogtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{42F9100F-E6F4-4963-BCC2-BACAEC695913}|DomainTests\\DomainTests.csproj|solutionrelative:domaintests\\backlogtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -27,40 +31,62 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "DoneState.cs",
+              "DocumentMoniker": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\Domain\\Backlogs\\BacklogItemStates\\DoneState.cs",
+              "RelativeDocumentMoniker": "Domain\\Backlogs\\BacklogItemStates\\DoneState.cs",
+              "ToolTip": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\Domain\\Backlogs\\BacklogItemStates\\DoneState.cs",
+              "RelativeToolTip": "Domain\\Backlogs\\BacklogItemStates\\DoneState.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T16:57:27.057Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Format.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\Domain\\Reports\\Format.cs",
+              "DocumentMoniker": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\Domain\\Reports\\Format.cs",
               "RelativeDocumentMoniker": "Domain\\Reports\\Format.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\Domain\\Reports\\Format.cs",
+              "ToolTip": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\Domain\\Reports\\Format.cs",
               "RelativeToolTip": "Domain\\Reports\\Format.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-30T21:47:48.501Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ReportTests.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\ReportTests.cs",
+              "DocumentMoniker": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\DomainTests\\ReportTests.cs",
               "RelativeDocumentMoniker": "DomainTests\\ReportTests.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\ReportTests.cs",
+              "ToolTip": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\DomainTests\\ReportTests.cs",
               "RelativeToolTip": "DomainTests\\ReportTests.cs",
               "ViewState": "AgIAAFQAAAAAAAAAAAASwHwAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T20:38:30.995Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-30T20:38:30.995Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "BacklogTests.cs",
-              "DocumentMoniker": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\BacklogTests.cs",
+              "DocumentMoniker": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\DomainTests\\BacklogTests.cs",
               "RelativeDocumentMoniker": "DomainTests\\BacklogTests.cs",
-              "ToolTip": "C:\\Users\\zjwanz\\Repos\\avans-dev-ops\\DomainTests\\BacklogTests.cs",
+              "ToolTip": "C:\\Users\\zjwanz\\iCloudDrive\\school\\3. Software ontwerp \u0026 architectuur 3\\avans-dev-ops\\DomainTests\\BacklogTests.cs",
               "RelativeToolTip": "DomainTests\\BacklogTests.cs",
               "ViewState": "AgIAAEwAAAAAAAAAAAAgwGkAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-30T20:34:57.663Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 163,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{a83394e3-39c2-4678-a3c8-364b69d78fd3}"
             }
           ]
         }

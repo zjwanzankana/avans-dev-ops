@@ -7,7 +7,9 @@ namespace Domain.Notifications.ExternalMessageServices
     {
         public void SendNotification(string message, Developer developer)
         {
-            Console.WriteLine($"Google message: {message} send to {developer.GetName()}");
+            ArgumentNullException.ThrowIfNull(developer);
+
+            Console.WriteLine($"Google message: {message} send to {developer.Name}");
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using Domain.Developers;
 using Domain.Backlogs;
 using Domain.Sprints;
@@ -43,57 +41,41 @@ namespace Domain
             _sprints.Add(sprint);
         }
 
-        public List<Sprint> GetSprints()
-        {
-            return _sprints;
-        }
+        public ReadOnlyCollection<Sprint> Sprints => _sprints.AsReadOnly();
 
-        public Developer GetProductOwner()
-        {
-            return _productOwner;
-        }
+        public Developer ProductOwner => _productOwner;
 
-        public Backlog GetBacklog()
-        {
-            return _backlog;
-        }
+        public Backlog Backlog => _backlog;
 
-        public string GetName()
-        {
-            return this._name;
-        }
+        public string Name => _name;
 
-        public List<Developer> GetTesters()
-        {
-            return _testers;
-        }
+        public ReadOnlyCollection<Developer> Testers => _testers.AsReadOnly();
 
         public void AddTester(Developer tester)
         {
+            ArgumentNullException.ThrowIfNull(tester);
+
             //check if developer is already a tester
-            if (tester.GetRole() != Role.Tester)
+            if (tester.Role != Role.Tester)
             { 
-                throw new Exception("Developer is not a tester");
+                throw new InvalidOperationException("Developer is not a tester");
             }
 
             if (_testers.Contains(tester))
             { 
-                throw new Exception("Tester is already in the project");
+                throw new InvalidOperationException("Tester is already in the project");
             }
 
             _testers.Add(tester);
         }
 
-        public Forum GetForum()
-        {
-            return _forum;
-        }
+        public Forum Forum => _forum;
 
         public void CreateForum()
         {
             if(_forum != null)
             {
-                throw new Exception("Forum already exists");
+                throw new InvalidOperationException("Forum already exists");
             }
 
             _forum = new Forum();
@@ -104,14 +86,8 @@ namespace Domain
             _pipelines.Add(pipeline);
         }
 
-        public List<Pipeline> GetPipelines()
-        {
-            return _pipelines;
-        }
+        public ReadOnlyCollection<Pipeline> Pipelines => _pipelines.AsReadOnly();
 
-        public Repository GetRepository()
-        {
-            return _repository;
-        }
+        public Repository Repository => _repository;
     }
 }

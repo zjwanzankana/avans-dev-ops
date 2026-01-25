@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Sprints.SprintStates
 {
-    internal class InProgressState : SprintState
+    internal sealed class InProgressState : SprintState
     {
         private readonly Sprint _sprint;
         public InProgressState(Sprint sprint) : base(sprint)
@@ -17,7 +13,7 @@ namespace Domain.Sprints.SprintStates
         public override void NextState()
         {
             this._sprint.ChangeState(new FinishedState(_sprint));
-            this._sprint.GetState().StartStateAction();
+            this._sprint.State.StartStateAction();
         }
 
         public override void PreviousState()
@@ -27,7 +23,7 @@ namespace Domain.Sprints.SprintStates
 
         public override void StartStateAction()
         {
-            throw new Exception($"No action for Scheduled state");
+            throw new InvalidOperationException("No action for Scheduled state");
         }
 
         public override ESprintStates GetSprintState()

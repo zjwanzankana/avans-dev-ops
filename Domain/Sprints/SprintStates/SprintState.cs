@@ -12,7 +12,7 @@ namespace Domain.Sprints.SprintStates
     {
         private readonly Sprint _sprint;
 
-        public SprintState(Sprint sprint)
+        protected SprintState(Sprint sprint)
         {
             this._sprint = sprint;
         }
@@ -24,27 +24,27 @@ namespace Domain.Sprints.SprintStates
 
         public virtual void SetName(string name)
         {
-            throw new Exception($"Can't set name in this {GetSprintState()}");
+            throw new InvalidOperationException($"Can't set name in this {GetSprintState()}");
         }
 
         public virtual void SetStartDate(DateTime startDate)
         {
-            throw new Exception($"Can't set start date in this {GetSprintState()}");
+            throw new InvalidOperationException($"Can't set start date in this {GetSprintState()}");
         }
 
         public virtual void SetEndDate(DateTime endDate)
         {
-            throw new Exception($"Can't set end date in this {GetSprintState()}");
+            throw new InvalidOperationException($"Can't set end date in this {GetSprintState()}");
         }
 
         public virtual void AddDeveloper(Developer developer)
         {
-            throw new Exception($"Can't add developer in this {GetSprintState()}");
+            throw new InvalidOperationException($"Can't add developer in this {GetSprintState()}");
         }
 
         public virtual void AddToSprintBacklog(BacklogItem backlogItem)
         {
-           throw new Exception($"Can't add backlog item in this {GetSprintState()}");
+           throw new InvalidOperationException($"Can't add backlog item in this {GetSprintState()}");
         }
 
         public abstract ESprintStates GetSprintState();

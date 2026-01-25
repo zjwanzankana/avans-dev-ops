@@ -11,39 +11,36 @@ namespace Domain.Backlogs.BacklogItemStates
     {
         private readonly BacklogItem _backlogItem;
 
-        public BacklogItemState(BacklogItem backlogItem)
+        protected BacklogItemState(BacklogItem backlogItem)
         {
             _backlogItem = backlogItem;
         }
         public virtual void AddActivity(Activity activity)
         {
-            _backlogItem.AddActivity(activity);
+            BacklogItem.AddActivity(activity);
         }
 
         public virtual void RemoveActivity(Activity activity)
         {
-            _backlogItem.RemoveActivity(activity);
+            BacklogItem.RemoveActivity(activity);
         }
 
         public virtual void SetDescription(string description)
         {
-            _backlogItem.SetDescription(description);
+            BacklogItem.Description = description;
         }
 
         public virtual void SetEffort(int newEffort)
         {
-            _backlogItem.SetEffort(newEffort);
+            BacklogItem.Effort = newEffort;
         }
 
         public virtual void SetName(string newName)
         {
-            _backlogItem.SetName(newName);
+            BacklogItem.Name = newName;
         }
 
-        public BacklogItem GetBacklogItem()
-        {
-            return _backlogItem;
-        }
+        public BacklogItem BacklogItem => _backlogItem;
 
         public abstract EBacklogStates GetState();
 

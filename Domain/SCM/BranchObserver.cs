@@ -1,6 +1,6 @@
 ﻿namespace Domain.SCM
 {
-    public interface BranchObserver
+    public interface IBranchObserver
     {
         void Update();
     }

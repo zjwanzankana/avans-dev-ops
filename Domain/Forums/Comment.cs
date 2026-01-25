@@ -1,9 +1,5 @@
 ﻿using Domain.Developers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Forums
 {
@@ -22,24 +18,12 @@ namespace Domain.Forums
             _date = DateTime.Now;
         }
 
-        public Thread GetThread()
-        {
-            return _thread;
-        }
+        public Thread Thread => _thread;
 
-        public string GetText()
-        {
-            return _comment;
-        }
+        public string Text => _comment;
 
-        public Developer GetAuthor()
-        {
-            return _author;
-        }
+        public Developer Author => _author;
 
-        public DateTime GetDate()
-        {
-            return this._date;
-        }
+        public DateTime Date => _date;
     }
 }

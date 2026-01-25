@@ -10,7 +10,7 @@ namespace Domain.Pipelines.PipelineCommands
     {
         private bool _isSucces = true;
 
-        private bool _buildWithDebugOn = false;
+        private bool _buildWithDebugOn;
 
         public PipelineJobBuildCommand(string name, string command, bool buildWithDebugOn) : base(name, command)
         {
@@ -19,21 +19,21 @@ namespace Domain.Pipelines.PipelineCommands
 
         public override void Execute()
         {
-            base.SetStatus(PipelineJobStatus.Running);
+            Status = PipelineJobStatus.Running;
 
-            Console.WriteLine($"Running command {base.GetName()} type {this.GetType().Name} with command {base.GetCommand()} BuildDebugOnStats {_buildWithDebugOn}");
+            Console.WriteLine($"Running command {Name} type {GetType().Name} with command {Command} BuildDebugOnStats {_buildWithDebugOn}");
 
-            base.SetStatus(PipelineJobStatus.Running);
+            Status = PipelineJobStatus.Running;
 
             if (_isSucces)
             {
-                base.SetOutput($"Sources succesfully retrieved BuildDebugOnStatus = {_buildWithDebugOn}");
-                base.SetStatus(PipelineJobStatus.FINISHED);
+                Output = $"Sources succesfully retrieved BuildDebugOnStatus = {_buildWithDebugOn}";
+                Status = PipelineJobStatus.FINISHED;
             }
             else
             {
-                base.SetOutput($"Sources unsuccesfully retrieved BuildDebugOnStatus = {_buildWithDebugOn}");
-                base.SetStatus(PipelineJobStatus.FAILED);
+                Output = $"Sources unsuccesfully retrieved BuildDebugOnStatus = {_buildWithDebugOn}";
+                Status = PipelineJobStatus.FAILED;
             }
         }
 

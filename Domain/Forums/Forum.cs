@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace Domain.Forums
 {
@@ -17,14 +15,16 @@ namespace Domain.Forums
 
         public void AddThread(Thread thread)
         {
-            if (thread.GetActivity().GetStatus() == Backlogs.ActivityStatus.Done)
+            ArgumentNullException.ThrowIfNull(thread);
+
+            if (thread.Activity.Status == Backlogs.ActivityStatus.Done)
             { 
-                throw new Exception("Can't add a thread to a done activity");
+                throw new InvalidOperationException("Can't add a thread to a done activity");
             }
 
-            if (string.IsNullOrWhiteSpace(thread.GetTitle()))
+            if (string.IsNullOrWhiteSpace(thread.Title))
             { 
-                throw new Exception("Can't add a thread without a title");
+                throw new InvalidOperationException("Can't add a thread without a title");
             }
 
             _threads.Add(thread);
@@ -35,15 +35,12 @@ namespace Domain.Forums
 
             if (!_threads.Contains(thread))
             {
-                throw new Exception("Can't remove a thread that doesn't exist");
+                throw new InvalidOperationException("Can't remove a thread that doesn't exist");
             }
 
             _threads.Remove(thread);
         }
 
-        public List<Thread> GetThreads()
-        {
-            return _threads;
-        }
+        public ReadOnlyCollection<Thread> Threads => _threads.AsReadOnly();
     }
 }

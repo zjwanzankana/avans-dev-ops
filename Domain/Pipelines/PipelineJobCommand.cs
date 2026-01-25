@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Pipelines
 {
+    /// <summary>
+    /// Abstract base class voor pipeline commands.
+    /// Implementeert het Command design pattern voor verschillende pipeline acties.
+    /// </summary>
     public abstract class PipelineJobCommand
     {
         private string _name;
@@ -16,41 +20,27 @@ namespace Domain.Pipelines
 
         private PipelineJobStatus _status;
 
-        public PipelineJobCommand(string name, string command)
+        protected PipelineJobCommand(string name, string command)
         {
             _name = name;
             _command = command;
             _status = PipelineJobStatus.Off;
         }
 
-        public string GetOutput()
-        { 
-            return _output;
+        public string Output
+        {
+            get => _output;
+            protected set => _output = value;
         }
 
-        public void SetOutput(string output)
-        {
-            _output = output;
-        }
+        public string Command => _command;
 
-        public string GetCommand()
-        {
-            return _command;
-        }
+        public string Name => _name;
 
-        public string GetName()
+        public PipelineJobStatus Status
         {
-            return _name;
-        }
-
-        public PipelineJobStatus GetStatus()
-        {
-            return _status;
-        }
-
-        public void SetStatus(PipelineJobStatus status)
-        {
-            _status = status;
+            get => _status;
+            internal set => _status = value;
         }
 
         public abstract void Execute();

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Domain.SCM
 {
@@ -23,9 +20,6 @@ namespace Domain.SCM
             _branches.Add(branch);
         }
 
-        public List<Branch> GetBranches()
-        {
-            return _branches;
-        }
+        public ReadOnlyCollection<Branch> Branches => _branches.AsReadOnly();
     }
 }

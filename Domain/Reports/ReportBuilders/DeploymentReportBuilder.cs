@@ -1,9 +1,5 @@
 ﻿using Domain.Sprints;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Reports.ReportBuilders
 {
@@ -23,12 +19,21 @@ namespace Domain.Reports.ReportBuilders
 
         public void BuildFooter()
         {
-            this._report.Footer = new Footer { companyname = "Avans", companyLogo = "AvansLogo"};
+            this._report.Footer = new Footer { Companyname = "Avans", CompanyLogo = "AvansLogo"};
         }
 
-        public void BuildHeader(DateTime date, Sprint sprint, string reportName)
+        public void BuildHeader(DateTime reportDate, Sprint sprint, string reportName)
         {
-            this._report.Header = new Header {companyname = "Avans", companyLogo = "AvansLogo", creationDate =  date, reportName = reportName, sprintName = sprint.GetName()};
+            ArgumentNullException.ThrowIfNull(sprint);
+
+            this._report.Header = new Header
+            {
+                companyname = "Avans",
+                companyLogo = "AvansLogo",
+                creationDate = reportDate,
+                reportName = reportName,
+                sprintName = sprint.Name
+            };
         }
 
         public Report GetReport(Format format)

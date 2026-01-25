@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace Domain.Pipelines
 {
@@ -14,9 +12,9 @@ namespace Domain.Pipelines
 
         private PipelineJobCommand _currentCommand;
 
-        public Pipeline(List<PipelineJobCommand> commands, string name)
+        public Pipeline(IReadOnlyList<PipelineJobCommand> commands, string name)
         {
-            _commands = commands;
+            _commands = commands == null ? new List<PipelineJobCommand>() : new List<PipelineJobCommand>(commands);
             _name = name;
         }
 
@@ -29,12 +27,12 @@ namespace Domain.Pipelines
         {
             if(_commands.Count == 0)
             {
-                throw new Exception("Can't execute pipeline without commands");
+                throw new InvalidOperationException("Can't execute pipeline without commands");
             }
 
             foreach (var command in _commands)
             {
-                command.SetStatus(PipelineJobStatus.Queued);
+                command.Status = PipelineJobStatus.Queued;
             }
 
             _status = PipelineJobStatus.Running;
@@ -42,7 +40,7 @@ namespace Domain.Pipelines
             {
                 _currentCommand = command;
                 command.Execute();
-                if (command.GetStatus() == PipelineJobStatus.FAILED)
+                if (command.Status == PipelineJobStatus.FAILED)
                 {
                     _status = PipelineJobStatus.FAILED;
 
@@ -56,46 +54,49 @@ namespace Domain.Pipelines
             //tell here whole pipeline succeeded
         }
 
-        public List<string> PipelineOutput()
-        { 
-            List<string> commandOutputs = new List<string>();
-
-            foreach (PipelineJobCommand c in _commands)
-            {
-                commandOutputs.Add(c.GetOutput());
-            }
-
-            return commandOutputs;
-        }
-
-        public PipelineJobStatus GetStatus()
-        { 
-            return _status;
-        }
-
-        public List<PipelineJobCommand> GetCommands()
+        public ReadOnlyCollection<string> PipelineOutput
         {
-            if (_status == PipelineJobStatus.FINISHED || _status == PipelineJobStatus.FAILED)
+            get
             {
-                return _commands;
-            }
+                List<string> commandOutputs = new List<string>();
 
-            throw new Exception("Can't get commands while pipeline is not done");
+                foreach (PipelineJobCommand c in _commands)
+                {
+                    commandOutputs.Add(c.Output);
+                }
+
+                return new ReadOnlyCollection<string>(commandOutputs);
+            }
         }
 
-        public PipelineJobCommand GetCurrentCommand()
-        {
-            if (_status == PipelineJobStatus.Off || _status == PipelineJobStatus.Queued)
-            {
-                throw new Exception("Can't get command when pipeline is not yet running");
-            }
-            return _currentCommand;
-        } 
+        public PipelineJobStatus Status => _status;
 
-        public string GetName()
+        public ReadOnlyCollection<PipelineJobCommand> Commands
         {
-            return _name;
+            get
+            {
+                if (_status == PipelineJobStatus.FINISHED || _status == PipelineJobStatus.FAILED)
+                {
+                    return _commands.AsReadOnly();
+                }
+
+                throw new InvalidOperationException("Can't get commands while pipeline is not done");
+            }
         }
+
+        public PipelineJobCommand CurrentCommand
+        {
+            get
+            {
+                if (_status == PipelineJobStatus.Off || _status == PipelineJobStatus.Queued)
+                {
+                    throw new InvalidOperationException("Can't get command when pipeline is not yet running");
+                }
+                return _currentCommand;
+            }
+        }
+
+        public string Name => _name;
 
         public void SetName(string name)
         {

@@ -2,8 +2,8 @@
 {
     public class Footer
     {
-        public string companyname { get; set; }
+        public string Companyname { get; set; }
 
-        public string companyLogo { get; set; }
+        public string CompanyLogo { get; set; }
     }
 }
