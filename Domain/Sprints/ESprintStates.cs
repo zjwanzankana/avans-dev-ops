@@ -10,6 +10,8 @@ namespace Domain.Sprints
     {
         Scheduled,
         InProgress,
-        Finished
+        Finished,
+        Closed,
+        Cancelled
     }
 }

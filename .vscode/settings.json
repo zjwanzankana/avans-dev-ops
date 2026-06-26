@@ -3,9 +3,6 @@
     "**/bin/": true,
     "**/obj/": true,
     "**/*.sln": true,
-    "**/*.csproj": true,
-
-
-
+    "**/*.csproj": true
   }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace DomainTests
 {
+    /// <summary>FR_S3 / FR_S4 - sprint levenscyclus (Scheduled -> InProgress -> Finished -> Closed/Cancelled).</summary>
     public class SprintStateTests
     {
         [Fact]
@@ -30,41 +31,41 @@ namespace DomainTests
         }
 
         [Fact]
-        public void Scheduled_State_Has_No_Previous_Or_Start_Action()
+        public void A_Scheduled_Sprint_Refuses_Finish_And_Close()
         {
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer>());
 
-            Assert.Throws<InvalidOperationException>(() => sprint.State.PreviousState());
-            Assert.Throws<InvalidOperationException>(() => sprint.State.StartStateAction());
+            Assert.Throws<InvalidOperationException>(() => sprint.State.Finish());
+            Assert.Throws<InvalidOperationException>(() => sprint.State.Close());
         }
 
         [Fact]
-        public void A_Sprint_Can_Move_To_In_Progress_And_Back()
+        public void A_Sprint_Can_Move_From_Scheduled_To_InProgress_To_Finished()
         {
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer>());
 
-            sprint.State.NextState();
+            sprint.Start();
             Assert.Equal(ESprintStates.InProgress, sprint.State.GetSprintState());
 
-            sprint.State.PreviousState();
-            Assert.Equal(ESprintStates.Scheduled, sprint.State.GetSprintState());
+            sprint.Finish();
+            Assert.Equal(ESprintStates.Finished, sprint.State.GetSprintState());
         }
 
         [Fact]
-        public void A_Sprint_Can_Finish_And_Run_Pipeline_For_Release()
+        public void A_Release_Sprint_Runs_Its_Pipeline_When_Finished()
         {
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
-            var pipelineCommand = CreateCommand("Analyze", PipelineJobStatus.FINISHED, "Analyze done");
+            var pipelineCommand = CreateCommand(PipelineJobStatus.FINISHED, "Analyze done");
             var pipeline = new Pipeline(new List<PipelineJobCommand> { pipelineCommand.Object }, "release");
             var sprint = new ReleaseSprint(project, "Release 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner }, pipeline);
 
-            sprint.State.NextState();
-            sprint.State.NextState();
+            sprint.Start();
+            sprint.Finish();
 
             Assert.Equal(ESprintStates.Finished, sprint.State.GetSprintState());
             Assert.Equal(PipelineJobStatus.FINISHED, pipeline.Status);
@@ -72,50 +73,114 @@ namespace DomainTests
         }
 
         [Fact]
-        public void A_Finished_Review_Sprint_SetReview_Throws_But_Sets_Review()
+        public void A_Release_Sprint_Can_Be_Closed_When_Pipeline_Succeeds()
         {
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner });
-            var review = new Review("Looks good", productOwner, sprint);
+            var pipeline = new Pipeline(new List<PipelineJobCommand> { CreateCommand(PipelineJobStatus.FINISHED, "ok").Object }, "release");
+            var sprint = new ReleaseSprint(project, "Release 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner }, pipeline);
 
-            sprint.State.NextState();
-            sprint.State.NextState();
+            sprint.Start();
+            sprint.Finish();
+            sprint.Close();
 
-            Assert.Throws<InvalidOperationException>(() => sprint.State.SetReview(review));
-            Assert.Equal(review, sprint.Review);
+            Assert.Equal(ESprintStates.Closed, sprint.State.GetSprintState());
         }
 
         [Fact]
-        public void A_Finished_Review_Sprint_Can_Set_Review_Item()
+        public void A_Release_Sprint_Cannot_Be_Closed_When_Pipeline_Fails_But_Can_Be_Cancelled()
+        {
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var notify = new Mock<INotificatorService>();
+            var owner = TestHelpers.CreateDeveloper("PO", Role.Developer, notify.Object);
+            var project = new Project(owner, "Project 1");
+            var failing = CreateCommand(PipelineJobStatus.FAILED, "boom");
+            var pipeline = new Pipeline(new List<PipelineJobCommand> { failing.Object }, "release");
+            var sprint = new ReleaseSprint(project, "Release 1", DateTime.Today, DateTime.Today.AddDays(7), owner, new List<Developer> { owner }, pipeline);
+
+            sprint.Start();
+            sprint.Finish();
+
+            Assert.Equal(PipelineJobStatus.FAILED, pipeline.Status);
+            Assert.Throws<InvalidOperationException>(() => sprint.Close());
+
+            sprint.CancelRelease();
+            Assert.Equal(ESprintStates.Cancelled, sprint.State.GetSprintState());
+            notify.Verify(s => s.SendNotification(It.IsAny<string>(), owner), Times.AtLeastOnce);
+        }
+
+        [Fact]
+        public void A_Failed_Release_Can_Be_Retried_And_Then_Closed()
         {
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner });
-            var review = new Review("Looks good", productOwner, sprint);
+            // Eerste run faalt, daarna 'herstelt' het commando en slaagt de retry.
+            var command = new Mock<PipelineJobCommand>("Deploy", "cmd");
+            var attempts = 0;
+            command.Setup(c => c.Execute()).Callback(() =>
+            {
+                attempts++;
+                SetStatus(command.Object, attempts == 1 ? PipelineJobStatus.FAILED : PipelineJobStatus.FINISHED);
+                SetOutput(command.Object, "out");
+            });
+            var pipeline = new Pipeline(new List<PipelineJobCommand> { command.Object }, "release");
+            var sprint = new ReleaseSprint(project, "Release 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner }, pipeline);
 
-            sprint.State.NextState();
-            sprint.State.NextState();
-            sprint.SetReviewItem(review);
+            sprint.Start();
+            sprint.Finish();
+            Assert.Equal(PipelineJobStatus.FAILED, pipeline.Status);
+
+            sprint.RetryRelease();
+            Assert.Equal(PipelineJobStatus.FINISHED, pipeline.Status);
+
+            sprint.Close();
+            Assert.Equal(ESprintStates.Closed, sprint.State.GetSprintState());
+        }
+
+        [Fact]
+        public void A_Review_Sprint_Can_Only_Be_Closed_After_The_Scrum_Master_Uploads_A_Review()
+        {
+            var scrumMaster = TestHelpers.CreateDeveloper("Scrum", Role.LeadDeveloper);
+            var project = new Project(scrumMaster, "Project 1");
+            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), scrumMaster, new List<Developer> { scrumMaster });
+
+            sprint.Start();
+            sprint.Finish();
+
+            // Zonder geuploade review kan de sprint niet sluiten.
+            Assert.Throws<InvalidOperationException>(() => sprint.Close());
+
+            sprint.UploadReview(new Review("Looks good", scrumMaster, sprint));
+            sprint.Close();
 
             Assert.True(sprint.IsReviewDone);
-            Assert.Equal(review, sprint.Review);
+            Assert.Equal(ESprintStates.Closed, sprint.State.GetSprintState());
         }
 
         [Fact]
-        public void A_Finished_Release_Sprint_Does_Not_Accept_Reviews()
+        public void A_Review_Cannot_Be_Uploaded_Before_The_Sprint_Is_Finished()
         {
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
-            var project = new Project(productOwner, "Project 1");
-            var pipelineCommand = CreateCommand("Analyze", PipelineJobStatus.FINISHED, "Analyze done");
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { pipelineCommand.Object }, "release");
-            var sprint = new ReleaseSprint(project, "Release 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner }, pipeline);
-            var review = new Review("Looks good", productOwner, sprint);
+            var scrumMaster = TestHelpers.CreateDeveloper("Scrum", Role.LeadDeveloper);
+            var project = new Project(scrumMaster, "Project 1");
+            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), scrumMaster, new List<Developer> { scrumMaster });
 
-            sprint.State.NextState();
-            sprint.State.NextState();
+            sprint.Start();
 
-            Assert.Throws<InvalidOperationException>(() => sprint.State.SetReview(review));
+            Assert.Throws<InvalidOperationException>(() => sprint.UploadReview(new Review("x", scrumMaster, sprint)));
+        }
+
+        [Fact]
+        public void Only_The_Scrum_Master_Can_Upload_A_Review()
+        {
+            var scrumMaster = TestHelpers.CreateDeveloper("Scrum", Role.LeadDeveloper);
+            var someoneElse = TestHelpers.CreateDeveloper("Dev", Role.Developer);
+            var project = new Project(scrumMaster, "Project 1");
+            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), scrumMaster, new List<Developer> { scrumMaster });
+
+            sprint.Start();
+            sprint.Finish();
+
+            Assert.Throws<InvalidOperationException>(() => sprint.UploadReview(new Review("x", someoneElse, sprint)));
         }
 
         [Fact]
@@ -124,8 +189,7 @@ namespace DomainTests
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
             var project = new Project(productOwner, "Project 1");
             var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Today, DateTime.Today.AddDays(7), productOwner, new List<Developer> { productOwner });
-            var pipelineCommand = CreateCommand("Analyze", PipelineJobStatus.FINISHED, "Analyze done");
-            var pipeline = new Pipeline(new List<PipelineJobCommand> { pipelineCommand.Object }, "pipeline");
+            var pipeline = new Pipeline(new List<PipelineJobCommand> { CreateCommand(PipelineJobStatus.FINISHED, "ok").Object }, "pipeline");
 
             pipeline.SetStatus(PipelineJobStatus.Running);
             sprint.SetPipeline(pipeline);
@@ -135,25 +199,21 @@ namespace DomainTests
             Assert.Throws<InvalidOperationException>(() => sprint.SetEndDate(DateTime.Today.AddDays(10)));
         }
 
-        private static Mock<PipelineJobCommand> CreateCommand(string name, PipelineJobStatus status, string output)
+        private static Mock<PipelineJobCommand> CreateCommand(PipelineJobStatus status, string output)
         {
-            var mock = new Mock<PipelineJobCommand>(name, "command");
+            var mock = new Mock<PipelineJobCommand>("cmd", "command");
             mock.Setup(c => c.Execute()).Callback(() =>
             {
-                SetCommandStatus(mock.Object, status);
-                SetCommandOutput(mock.Object, output);
+                SetStatus(mock.Object, status);
+                SetOutput(mock.Object, output);
             });
             return mock;
         }
 
-        private static void SetCommandStatus(PipelineJobCommand command, PipelineJobStatus status)
-        {
-            typeof(PipelineJobCommand).GetProperty("Status")!.SetValue(command, status);
-        }
+        private static void SetStatus(PipelineJobCommand command, PipelineJobStatus status)
+            => typeof(PipelineJobCommand).GetProperty("Status")!.SetValue(command, status);
 
-        private static void SetCommandOutput(PipelineJobCommand command, string output)
-        {
-            typeof(PipelineJobCommand).GetProperty("Output")!.SetValue(command, output);
-        }
+        private static void SetOutput(PipelineJobCommand command, string output)
+            => typeof(PipelineJobCommand).GetProperty("Output")!.SetValue(command, output);
     }
 }

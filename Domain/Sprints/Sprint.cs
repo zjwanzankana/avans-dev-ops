@@ -67,6 +67,33 @@ namespace Domain.Sprints
             this._state = state;
         }
 
+        // ---- Levenscyclus-transities (delegeren naar de huidige state) --------
+        public void Start() => _state.Start();
+
+        public void Finish() => _state.Finish();
+
+        public void Close() => _state.Close();
+
+        public void CancelRelease() => _state.Cancel();
+
+        public void RetryRelease() => _state.Retry();
+
+        /// <summary>
+        /// Sprint-type-specifieke afronding. Wordt polymorf aangeroepen vanuit de
+        /// FinishedState i.p.v. een GetType()-switch (zie criticism rubric).
+        /// </summary>
+        protected internal abstract void OnFinish();
+
+        /// <summary>Voorwaarde om de sprint te mogen sluiten (verschilt per sprinttype).</summary>
+        protected internal abstract bool CanClose();
+
+        /// <summary>Bericht naar product owner en scrum master (FR_N1).</summary>
+        public void NotifyStakeholders(string message)
+        {
+            _project.ProductOwner?.SendNotification(message);
+            _scrumMaster?.SendNotification(message);
+        }
+
         public ReadOnlyCollection<BacklogItem> BacklogItems => _backlogItems.AsReadOnly();
 
         public ReadOnlyCollection<Developer> Developers => _developers.AsReadOnly();

@@ -1,5 +1,4 @@
 ﻿using Domain.Notifications;
-using Domain.Notifications.ExternalMessageServices;
 using System;
 
 namespace Domain.Developers

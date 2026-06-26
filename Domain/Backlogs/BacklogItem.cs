@@ -140,8 +140,28 @@ namespace Domain.Backlogs
         {
             foreach (var observer in _observers)
             {
-                observer.Update(State);                
+                observer.Update(State);
             }
+        }
+
+        /// <summary>Stuurt een bericht naar alle testers van het project (FR_N1).</summary>
+        public void NotifyTesters(string message)
+        {
+            if (_sprint == null)
+            {
+                return;
+            }
+
+            foreach (var tester in _sprint.Project.Testers)
+            {
+                tester.SendNotification(message);
+            }
+        }
+
+        /// <summary>Stuurt een bericht naar de scrum master van de sprint (FR_N1).</summary>
+        public void NotifyScrumMaster(string message)
+        {
+            _sprint?.ScrumMaster?.SendNotification(message);
         }
     }
 }

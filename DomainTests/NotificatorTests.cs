@@ -44,11 +44,11 @@ namespace DomainTests
             var notificator = new Notificator(notifiedDeveloper);
             backlogItem.Register(notificator);
 
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
+            backlogItem.State.BeginWork();
+            backlogItem.State.SubmitForTesting();
+            backlogItem.State.StartTesting();
+            backlogItem.State.CompleteTesting();
+            backlogItem.State.Approve();
 
             //Assert
             Assert.Equal(EBacklogStates.done, backlogItem.StateType);

@@ -57,7 +57,7 @@ jobs:
             /k:"${SONAR_PROJECT_KEY}" \
             /o:"${SONAR_ORG}"  \
             /d:sonar.host.url="${SONAR_HOST_URL}" \
-            /d:sonar.login="${SONAR_TOKEN}" \
+            /d:sonar.token="${SONAR_TOKEN}" \
             /d:sonar.cs.opencover.reportsPaths=coverage/coverage.opencover.xml \
             /d:sonar.qualitygate.wait=true \
             "${extra_args[@]}"
@@ -87,4 +87,4 @@ jobs:
         if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.fork == false }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet-sonarscanner end /d:sonar.login="${SONAR_TOKEN}"
+        run: dotnet-sonarscanner end /d:sonar.token="${SONAR_TOKEN}"

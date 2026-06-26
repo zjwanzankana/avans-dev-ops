@@ -8,8 +8,15 @@ using System.Threading.Tasks;
 namespace Domain.Notifications
 {
     /// <summary>
-    /// Strategy interface voor verschillende notificatie services.
-    /// Implementeert het Strategy design pattern voor notificatie mechanismes.
+    /// Adapter pattern (GoF, structural) - 'Target'.
+    ///
+    /// Dit is de interface die het domein nodig heeft: SendNotification(message, Developer).
+    /// De concrete adapters (EmailServiceAdapter, SlackServiceAdapter) implementeren deze
+    /// Target en vertalen de aanroep naar de afwijkende signatuur van de externe libraries
+    /// (de 'Adaptees' ISmtpServer.SendMail(...) en ISlackApiClient.PostMessage(...)).
+    ///
+    /// Het domein hangt dus alleen af van deze abstractie (Dependency Inversion); een nieuw
+    /// medium toevoegen = één nieuwe adapter, zonder bestaande code te wijzigen (OCP).
     /// </summary>
     public interface INotificatorService
     {

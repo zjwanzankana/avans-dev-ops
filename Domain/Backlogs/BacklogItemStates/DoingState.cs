@@ -1,37 +1,27 @@
-﻿using System;
+using System;
 
 namespace Domain.Backlogs.BacklogItemStates
 {
+    /// <summary>State pattern - ConcreteState 'Doing'. Developer werkt aan het item.</summary>
     public class DoingState : BacklogItemState
     {
         public DoingState(BacklogItem backlogItem) : base(backlogItem)
         {
-            // Additional constructor logic if needed
         }
 
-        public override EBacklogStates GetState()
+        public override EBacklogStates GetState() => EBacklogStates.doing;
+
+        public override void SubmitForTesting()
         {
-            return EBacklogStates.doing;
-        }
-
-        public override void NextState()
-        {
-            //Only allow next state when all activities are done
-            if (BacklogItem.AllActivitiesDone())
-            {
-
-
-                BacklogItem.ChangeState(new ReadyForTestingState(BacklogItem));
-            }
-            else
+            if (!BacklogItem.AllActivitiesDone())
             {
                 throw new InvalidOperationException("Can't go to next state when not all activities are done");
             }
-        }
 
-        public override void PreviousState()
-        {
-            BacklogItem.ChangeState(new TodoState(BacklogItem));
+            BacklogItem.ChangeState(new ReadyForTestingState(BacklogItem));
+
+            // Business rule (FR_N1): zodra een item 'ready for testing' is, krijgen testers een notificatie.
+            BacklogItem.NotifyTesters($"Backlog item '{BacklogItem.Name}' is ready for testing.");
         }
     }
 }

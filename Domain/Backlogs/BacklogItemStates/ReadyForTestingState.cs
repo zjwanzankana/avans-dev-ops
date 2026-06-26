@@ -1,40 +1,30 @@
-﻿using System;
+using System;
 
 namespace Domain.Backlogs.BacklogItemStates
 {
+    /// <summary>State pattern - ConcreteState 'ReadyForTesting'. Wacht tot een tester het oppakt.</summary>
     public class ReadyForTestingState : BacklogItemState
     {
         public ReadyForTestingState(BacklogItem backlogItem) : base(backlogItem)
         {
         }
 
-        public override EBacklogStates GetState()
-        {
-            return EBacklogStates.readyfortesting;
-        }
+        public override EBacklogStates GetState() => EBacklogStates.readyfortesting;
 
         public override void AddActivity(Activity activity)
-        { 
+        {
             throw new InvalidOperationException("Can't add activity when ready to test");
         }
 
-        public override void NextState()
+        public override void StartTesting()
         {
-            // Only allow next state when all activities are done or active
-            if (BacklogItem.AllActivitiesDoneOrActive())
-            {
-                BacklogItem.ChangeState(new TestingState(BacklogItem));
-            }
-            else
-            {
-                throw new InvalidOperationException("Can't go to next state when not all activities are done or active");
-            }
+            BacklogItem.ChangeState(new TestingState(BacklogItem));
         }
 
-        public override void PreviousState()
+        public override void RejectByTester()
         {
-            var scrumMaster = BacklogItem.Sprint.ScrumMaster;
-            scrumMaster.SendNotification($"Hello {scrumMaster.Name} something is wrong with backlogitem: {BacklogItem.Name}");
+            BacklogItem.NotifyScrumMaster(
+                $"Backlog item '{BacklogItem.Name}' was marked ready but is not finished and went back to todo.");
 
             BacklogItem.ChangeState(new TodoState(BacklogItem));
         }

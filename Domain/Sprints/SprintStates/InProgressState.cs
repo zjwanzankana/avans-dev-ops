@@ -1,34 +1,21 @@
-﻿using System;
-
 namespace Domain.Sprints.SprintStates
 {
+    /// <summary>State pattern - ConcreteState 'InProgress'. Het team werkt de sprint uit.</summary>
     internal sealed class InProgressState : SprintState
     {
-        private readonly Sprint _sprint;
         public InProgressState(Sprint sprint) : base(sprint)
         {
-            _sprint = sprint;
         }
 
-        public override void NextState()
-        {
-            this._sprint.ChangeState(new FinishedState(_sprint));
-            this._sprint.State.StartStateAction();
-        }
+        public override ESprintStates GetSprintState() => ESprintStates.InProgress;
 
-        public override void PreviousState()
+        public override void Finish()
         {
-            this._sprint.ChangeState(new ScheduledState(_sprint));
-        }
+            Sprint.ChangeState(new FinishedState(Sprint));
 
-        public override void StartStateAction()
-        {
-            throw new InvalidOperationException("No action for Scheduled state");
-        }
-
-        public override ESprintStates GetSprintState()
-        {
-            return ESprintStates.InProgress;
+            // Polymorfe afronding i.p.v. een GetType()-switch: ReleaseSprint draait
+            // zijn pipeline, ReviewSprint doet (standaard) niets.
+            Sprint.OnFinish();
         }
     }
 }

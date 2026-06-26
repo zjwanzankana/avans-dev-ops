@@ -1,33 +1,29 @@
-﻿using System;
+using System;
 
 namespace Domain.Backlogs.BacklogItemStates
 {
+    /// <summary>State pattern - ConcreteState 'Tested'. (Lead) developer controleert de Definition of Done.</summary>
     public class TestedState : BacklogItemState
     {
         public TestedState(BacklogItem backlogItem) : base(backlogItem)
         {
-            // Lead dev checks DOD
         }
 
-        public override EBacklogStates GetState()
+        public override EBacklogStates GetState() => EBacklogStates.tested;
+
+        public override void Approve()
         {
-            return EBacklogStates.tested;
-        }
-        public override void NextState()
-        {
-            //only allow next state when all activities are done
-            if (BacklogItem.AllActivitiesDone())
+            if (!BacklogItem.AllActivitiesDone())
             {
-                BacklogItem.ChangeState(new DoneState(BacklogItem));
+                throw new InvalidOperationException("Can't go to done when not all activities are done");
             }
-            else
-            {
-                throw new InvalidOperationException("Can't go to next state when not all activities are done");
-            }
+
+            BacklogItem.ChangeState(new DoneState(BacklogItem));
         }
 
-        public override void PreviousState()
+        public override void RejectByLeadDeveloper()
         {
+            // DoD niet gehaald: terug naar ready for testing, de tester test opnieuw.
             BacklogItem.ChangeState(new ReadyForTestingState(BacklogItem));
         }
     }

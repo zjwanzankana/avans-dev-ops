@@ -1,65 +1,43 @@
-﻿using System;
+using System;
 
 namespace Domain.Sprints.SprintStates
 {
+    /// <summary>
+    /// State pattern - ConcreteState 'Finished'. 'De tijd is op'.
+    /// Vanaf hier splitst de flow zich (polymorf, geen type-switch):
+    ///  - ReviewSprint: Close() mag pas als de scrum master de review heeft geupload.
+    ///  - ReleaseSprint: Close() mag als de pipeline slaagde; bij een fout kan de scrum
+    ///    master Retry() of Cancel() kiezen.
+    /// </summary>
     internal sealed class FinishedState : SprintState
     {
-        private readonly Sprint _sprint;
-
         public FinishedState(Sprint sprint) : base(sprint)
         {
-            _sprint = sprint;
-            
-            // Pipeline execution wordt gestart via ReleaseSprint.Pipeline.Execute()
         }
 
-        public override void SetReview(Review review)
+        public override ESprintStates GetSprintState() => ESprintStates.Finished;
+
+        public override void Close()
         {
-            if (_sprint.GetType().Name == "ReviewSprint")
+            if (!Sprint.CanClose())
             {
-                if (review.Author == _sprint.ScrumMaster)
-                {
-                    ((ReviewSprint)_sprint).AddReview(review);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Only scrummaster can add a review");
-                }
-            }
-            throw new InvalidOperationException("Review can't be added to release sprint");
-        }
-
-        public override void NextState()
-        {
-            throw new InvalidOperationException($"No next state for {GetSprintState()} state");
-        }
-
-        public override void PreviousState()
-        {
-            this._sprint.ChangeState(new InProgressState(_sprint));
-        }
-
-        public override void StartStateAction()
-        {
-            switch (_sprint.GetType().Name)
-            {
-                case "ReleaseSprint":
-                    _sprint.Pipeline.Execute();
-                    break;
-                case "ReviewSprint":
-                    if (_sprint.Pipeline != null)
-                    { 
-                        _sprint.Pipeline.Execute();
-                    }
-                    break;
+                throw new InvalidOperationException(
+                    "Sprint can't be closed yet (review not uploaded or release pipeline not finished successfully).");
             }
 
-
+            Sprint.ChangeState(new ClosedState(Sprint));
         }
 
-        public override ESprintStates GetSprintState()
+        public override void Retry()
         {
-            return ESprintStates.Finished;
+            // Opnieuw proberen (bv. een server was tijdelijk onbereikbaar).
+            Sprint.OnFinish();
+        }
+
+        public override void Cancel()
+        {
+            Sprint.NotifyStakeholders($"Sprint '{Sprint.Name}' has been cancelled.");
+            Sprint.ChangeState(new CancelledState(Sprint));
         }
     }
 }

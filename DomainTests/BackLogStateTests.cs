@@ -1,445 +1,250 @@
+using Domain.Backlogs.BacklogItemStates;
 using Domain.Sprints;
+using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainTests
 {
+    /// <summary>
+    /// FR_B3 - backlog item fases (todo, doing, ready for testing, testing, tested, done).
+    /// De testen volgen de basispad- en uitzonderingspaden uit de toestandsdiagram (STD).
+    /// </summary>
     public class BackLogStateTests
     {
-        //FR_B3 Het systeem moet de verschillende fasen van een backlog item ondersteunen, zoals 'todo', 'doing', 'ready for testing', 'testing', 'tested' en 'done'. 
+        private static (Project project, ReviewSprint sprint, Developer dev) NewSprintWithDeveloper()
+        {
+            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var developer = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var tester = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
+            var developers = new List<Developer> { developer, tester, productOwner };
 
-        //•	Een backlog item moet de status 'todo' krijgen wanneer deze aan een sprintbacklog wordt toegevoegd.
+            var project = new Project(productOwner, "Project 1");
+            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
+            project.AddSprint(sprint);
+            return (project, sprint, developer);
+        }
+
+        private static BacklogItem AddItem(Project project, ReviewSprint sprint, Developer dev, bool assign = true)
+        {
+            var item = new BacklogItem("BacklogItem 1", "Description 1", 1, project.Backlog);
+            sprint.AddToSprintBacklog(item);
+            if (assign)
+            {
+                item.AssignDeveloper(dev);
+            }
+            return item;
+        }
+
+        // Een backlog item krijgt status 'todo' wanneer het aan een sprint wordt toegevoegd.
         [Fact]
         public void A_BacklogItem_Gets_Status_Todo_When_Added_To_A_Sprint()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev, assign: false);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
-
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-
-            //Assert
-            Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
+            Assert.Equal(EBacklogStates.todo, item.StateType);
         }
 
-
-        //cant go previous state from todo state
+        // Vanaf 'todo' bestaat geen terugpad: een ongeldige transitie wordt geweigerd.
         [Fact]
-        public void A_BacklogItem_Cant_Go_To_Previous_State_From_Todo_State()
+        public void A_BacklogItem_Cannot_Do_A_Backward_Transition_From_Todo()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
-
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-
-            //Assert
-            Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
-            Assert.Throws<InvalidOperationException>(() => backlogItem.State.PreviousState());
+            Assert.Equal(EBacklogStates.todo, item.StateType);
+            Assert.Throws<InvalidOperationException>(() => item.State.RejectByTester());
+            Assert.Throws<InvalidOperationException>(() => item.State.Reopen());
         }
 
-        //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
-
+        // Een item kan alleen van fase wisselen als het in een sprint zit.
         [Fact]
         public void A_BacklogItem_Cannot_Change_State_When_Not_Added_To_Sprint()
         {
-            //Arrange
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var developer = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var project = new Project(productOwner, "Project 1");
+            var item = new BacklogItem("BacklogItem 1", "Description 1", 1, project.Backlog);
+            item.AssignDeveloper(developer);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
-
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-
-            //Act
-            project.AddSprint(sprint);
-
-
-            //Assert
-            Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
-            Assert.Throws<InvalidOperationException>(() => backlogItem.State.NextState());
+            Assert.Throws<InvalidOperationException>(() => item.State.BeginWork());
         }
 
-        //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
+        // Basispad-stap: todo -> doing.
         [Fact]
         public void A_BacklogItem_Can_Change_State_From_Todo_To_Doing()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
+            item.State.BeginWork();
 
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
-
-            //Assert
-            Assert.Equal(EBacklogStates.doing, backlogItem.StateType);
-
+            Assert.Equal(EBacklogStates.doing, item.StateType);
         }
 
-        //•	Wanneer er geen developer is geassigned kan de backlogitem niet naar de doing fase.
+        // Zonder toegewezen developer kan een item niet naar 'doing'.
         [Fact]
-        public void A_BacklogItem_Cannot_Change_State_From_Doing_To_ReadyForTesting_When_NoDeveloperAssigned()
+        public void A_BacklogItem_Cannot_Start_Work_When_No_Developer_Assigned()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev, assign: false);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
-
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-
-            //Assert
-            Assert.Throws<InvalidOperationException>(() => backlogItem.State.NextState());
-
+            Assert.Throws<InvalidOperationException>(() => item.State.BeginWork());
         }
 
-        //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
+        // Basispad-stap: doing -> ready for testing.
         [Fact]
         public void A_BacklogItem_Can_Change_State_From_Doing_To_ReadyForTesting()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
+            item.State.BeginWork();
+            item.State.SubmitForTesting();
 
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-
-            //Assert
-            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.StateType);
-
+            Assert.Equal(EBacklogStates.readyfortesting, item.StateType);
         }
 
-        //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
+        // Guard: niet alle activiteiten done -> blijft in 'doing'.
+        [Fact]
+        public void A_BacklogItem_Cannot_Submit_For_Testing_When_Activities_Not_Done()
+        {
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
+            item.AddActivity(new Activity("Activity 1"));
+
+            item.State.BeginWork();
+
+            Assert.Throws<InvalidOperationException>(() => item.State.SubmitForTesting());
+        }
+
+        // Basispad-stap: ready for testing -> testing.
         [Fact]
         public void A_BacklogItem_Can_Change_State_From_ReadyForTesting_To_Testing()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
+            item.State.BeginWork();
+            item.State.SubmitForTesting();
+            item.State.StartTesting();
 
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-
-            //Assert
-            Assert.Equal(EBacklogStates.testing, backlogItem.StateType);
-
+            Assert.Equal(EBacklogStates.testing, item.StateType);
         }
 
-        //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
+        // Basispad-stap: testing -> tested.
         [Fact]
         public void A_BacklogItem_Can_Change_State_From_Testing_To_Tested()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
+            item.State.BeginWork();
+            item.State.SubmitForTesting();
+            item.State.StartTesting();
+            item.State.CompleteTesting();
 
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-
-            //Assert
-            Assert.Equal(EBacklogStates.tested, backlogItem.StateType);
-
+            Assert.Equal(EBacklogStates.tested, item.StateType);
         }
 
-        //•	Backlogitems van fase veranderen in de volgorde todo, doing, readyfortesting, testing, tested, done.
+        // Basispad-stap: tested -> done (Definition of Done akkoord).
         [Fact]
         public void A_BacklogItem_Can_Change_State_From_Tested_To_Done()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
+            item.State.BeginWork();
+            item.State.SubmitForTesting();
+            item.State.StartTesting();
+            item.State.CompleteTesting();
+            item.State.Approve();
 
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-
-            //Assert
-            Assert.Equal(EBacklogStates.done, backlogItem.StateType);
+            Assert.Equal(EBacklogStates.done, item.StateType);
         }
 
-        //•	Wanneer een item in readyfortesting toch niet af is gaat deze terug naar de todo fase
+        // Terugpad: tester vindt een defect tijdens testing -> terug naar todo + bericht scrum master.
         [Fact]
-        public void A_BacklogItem_Can_Change_State_From_ReadyForTesting_To_Todo_When_Not_Finished()
+        public void A_BacklogItem_Goes_Back_To_Todo_When_Tester_Rejects()
         {
-            //Arrange
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var scrumMasterService = new Mock<INotificatorService>();
+            var scrumMaster = TestHelpers.CreateDeveloper("Scrum", Role.LeadDeveloper, scrumMasterService.Object);
+            var developer = TestHelpers.CreateDeveloper("Hans", Role.Developer);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
-
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-
-            //Act
+            var project = new Project(productOwner, "Project 1");
+            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), scrumMaster, new List<Developer> { developer });
             project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.PreviousState();
 
-            //Assert
-            Assert.Equal(EBacklogStates.todo, backlogItem.StateType);
+            var item = new BacklogItem("BacklogItem 1", "Description 1", 1, project.Backlog);
+            sprint.AddToSprintBacklog(item);
+            item.AssignDeveloper(developer);
+
+            item.State.BeginWork();
+            item.State.SubmitForTesting();
+            item.State.StartTesting();
+            item.State.RejectByTester();
+
+            Assert.Equal(EBacklogStates.todo, item.StateType);
+            scrumMasterService.Verify(s => s.SendNotification(It.IsAny<string>(), scrumMaster), Times.AtLeastOnce);
         }
 
-        //•	Wanneer een item in de tested fase niet voldoet aan de DOD gaat hij terug naar de ready for testing fase.
+        // Terugpad: lead developer keurt DoD af -> tested terug naar ready for testing.
         [Fact]
-        public void A_BacklogItem_Can_Change_State_From_Tested_To_ReadyForTesting_When_Not_Done()
+        public void A_BacklogItem_Goes_Back_To_ReadyForTesting_When_DoD_Fails()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
+            item.State.BeginWork();
+            item.State.SubmitForTesting();
+            item.State.StartTesting();
+            item.State.CompleteTesting();
+            item.State.RejectByLeadDeveloper();
 
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.NextState();
-            backlogItem.State.PreviousState();
-
-            //Assert
-            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.StateType);
+            Assert.Equal(EBacklogStates.readyfortesting, item.StateType);
         }
 
-
-        //•	Een item kan niet naar de volgende fase wanneer de onderliggende activiteiten niet done zijn.
+        // 'done' is geen dead-end: een item kan heropend worden (-> todo).
         [Fact]
-        public void A_BacklogItem_Can_Change_State_From_Tested_To_ReadyForTesting_When_Not_All_Activities_Done()
+        public void A_BacklogItem_Can_Be_Reopened_From_Done()
         {
-            //Arrange
-            var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var (project, sprint, dev) = NewSprintWithDeveloper();
+            var item = AddItem(project, sprint, dev);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
+            item.State.BeginWork();
+            item.State.SubmitForTesting();
+            item.State.StartTesting();
+            item.State.CompleteTesting();
+            item.State.Approve();
+            item.State.Reopen();
 
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-
-            var activity1 = new Activity("Activity 1");
-            var activity2 = new Activity("Activity 2");
-
-            backlogItem.AddActivity(activity1);
-            backlogItem.AddActivity(activity2);
-
-            //Act
-            project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
-
-
-            //Assert
-            Assert.Equal(ActivityStatus.Todo, activity1.Status);
-            Assert.Throws<InvalidOperationException>(() => backlogItem.State.NextState());
+            Assert.Equal(EBacklogStates.todo, item.StateType);
         }
 
-
-        //•	Een item kan niet naar de volgende fase wanneer de onderliggende activiteiten niet done zijn.
+        // Notificatie: testers worden geinformeerd zodra een item 'ready for testing' is.
         [Fact]
-        public void A_BacklogItem_Can_Change_State_From_Tested_To_ReadyForTesting_When_All_Activities_Done()
+        public void Testers_Are_Notified_When_Item_Is_Ready_For_Testing()
         {
-            //Arrange
             var productOwner = TestHelpers.CreateDeveloper("John", Role.Developer);
+            var developer = TestHelpers.CreateDeveloper("Hans", Role.Developer);
+            var testerService = new Mock<INotificatorService>();
+            var tester = TestHelpers.CreateDeveloper("Tess", Role.Tester, testerService.Object);
 
-            var developer1 = TestHelpers.CreateDeveloper("Hans", Role.Developer);
-            var developer2 = TestHelpers.CreateDeveloper("Jan", Role.Developer);
-            var developer3 = TestHelpers.CreateDeveloper("Hans2", Role.Tester);
-            var developers = new List<Developer> { developer1, developer2, developer3, productOwner };
-
-            var name = "Project 1";
-            var project = new Project(productOwner, name);
-            var backlog = project.Backlog;
-            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, developers);
-
-            var backlogItem = new BacklogItem("BacklogItem 1", "Description 1", 1, backlog);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.AssignDeveloper(developer1);
-
-
-            var activity1 = new Activity("Activity 1");
-            var activity2 = new Activity("Activity 2");
-
-            backlogItem.AddActivity(activity1);
-            backlogItem.AddActivity(activity2);
-
-            //Act
+            var project = new Project(productOwner, "Project 1");
+            project.AddTester(tester);
+            var sprint = new ReviewSprint(project, "Sprint 1", DateTime.Now, DateTime.Now.AddDays(14), productOwner, new List<Developer> { developer });
             project.AddSprint(sprint);
-            sprint.AddToSprintBacklog(backlogItem);
-            backlogItem.State.NextState();
 
-            activity1.NextStatus();
-            activity1.NextStatus();
-            activity2.NextStatus();
-            activity2.NextStatus();
+            var item = new BacklogItem("BacklogItem 1", "Description 1", 1, project.Backlog);
+            sprint.AddToSprintBacklog(item);
+            item.AssignDeveloper(developer);
 
-            backlogItem.State.NextState();
+            item.State.BeginWork();
+            item.State.SubmitForTesting();
 
-            //Assert
-            Assert.Equal(ActivityStatus.Done, activity1.Status);
-            Assert.Equal(ActivityStatus.Done, activity2.Status);
-            Assert.Equal(EBacklogStates.readyfortesting, backlogItem.StateType);
+            testerService.Verify(s => s.SendNotification(It.IsAny<string>(), tester), Times.Once);
         }
     }
 }

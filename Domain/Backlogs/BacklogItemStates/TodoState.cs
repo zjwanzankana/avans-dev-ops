@@ -1,19 +1,17 @@
-﻿using System;
+using System;
 
 namespace Domain.Backlogs.BacklogItemStates
 {
+    /// <summary>State pattern - ConcreteState 'TodoState'. Startfase van elk item in de sprint.</summary>
     public class TodoState : BacklogItemState
     {
         public TodoState(BacklogItem backlogItem) : base(backlogItem)
         {
-            // Additional constructor logic if needed
         }
 
-        public override EBacklogStates GetState()
-        {
-            return EBacklogStates.todo;
-        }
-        public override void NextState()
+        public override EBacklogStates GetState() => EBacklogStates.todo;
+
+        public override void BeginWork()
         {
             if (BacklogItem.AssignedDeveloper == null)
             {
@@ -22,13 +20,5 @@ namespace Domain.Backlogs.BacklogItemStates
 
             BacklogItem.ChangeState(new DoingState(BacklogItem));
         }
-
-        public override void PreviousState()
-        {
-            //throw new system error because we can't go back from todo state
-            throw new InvalidOperationException("Can't go back from todo state");
-        }
-
-        
     }
 }
